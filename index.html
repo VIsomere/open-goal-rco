@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Collectibles Order</title>
+    <link rel="icon" type="image/x-icon" href="/img/power_cell_red.png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body">
+
+    <!-- 
+        TODO
+        - add orbs
+     -->
+    
+    <!-- info-image -->
+    <div id="info-image"></div>
+    <!-- Header -->
+    <div id="gradient-header"></div>
+    <div id="header">
+        <div>
+            <img id="header-icon" src="img/power_cell_red.png">
+            <h1>Random Collectibles Order (</h1>
+            <h1>RCO</h1>
+            <img src="img/+_red.png" style="margin: 0 -5px;">
+            <h1>)</h1>
+        </div>
+        <div>
+            <a href="https://livesplit.org/" target="_blank"><img src="img/livesplit_logo_red.png"></a>
+            <a href="https://opengoal.dev/" target="_blank"><img src="img/opengoal_logo_red.png"></a>
+            <a href="https://discord.com/users/607868214566846467" target="_blank"><img src="img/iso_red.png"></a>
+        </div>
+    </div>
+    <div id="main">
+        <div id="main-left">
+            <div class="text-container introduction">
+                <h1>Introduction</h1>
+                <p></p>
+                    Welcome to Random Collectibles Order. The idea of this randomizer was inspired by RCO (Random Cell Order)
+                    on the <a class="link" href="https://teamruns.web.app/rco" target="_blank">Teamruns</a> website.
+                    This randomizer extends the idea further and will not only randomize the order you have to grab the Power Cells in,
+                    but it also forces you to grab other collectibles (e.g., Scout Flies) and complete a series of miscellaneous tasks
+                    (e.g., connecting mirrors, pressing buttons, beating bosses) in a specific order. As you not only have to complete more objectives but also a larger variety of them
+                    this randomizer will have you revisiting and backtracking a lot and it will most likely come with a great deal of pain.<br><br>
+                    There may or may not be further updates in the future regarding small red eggs...
+            </div>
+            <div class="settings">
+                <div class="text-container">
+                    <h2>Seed</h2>
+                    <div id="seed-container" class="seed">
+                        <input type="number" placeholder="Seed" id="seed-input" maxLength="16" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+                        <button id="seed-button" onclick="generateSeed()"><i class="material-icons">sync</i></button>
+                    </div>
+                </div>
+                
+                <div class="rules">
+                    <div id="check-boxes">
+                    <h2>Rules</h2>
+                    <a>Progress Display</a>
+                    <div>
+                        <label class="check-box-container"><input type="checkbox" class="inits" name="write_split_progress"><span class="checkmark"></span>Write Split Progress</label>
+                        <label class="checkbox-info" name="write_split_progress"><i class="material-icons">question_mark</i><span class="info-box">Show your progress by displaying the amount of completed tasks</span></label>
+                    </div>
+                    <div>
+                        <label class="check-box-container"><input type="checkbox" class="inits" name="write_percent_progress"><span class="checkmark"></span>Write Percent Progress</label>
+                        <label class="checkbox-info" name="write_percent_progress"><i class="material-icons">question_mark</i><span class="info-box">Show your progress by displaying the percentage of completed tasks</span></label>
+                    </div>
+                    <a>Inclusion</a>
+                    <div>
+                        <label class="check-box-container"><input type="checkbox" class="inits" name="exclude_scout_flies"><span class="checkmark"></span>Exclude Scout Flies</label>
+                        <label class="checkbox-info" name="exclude_scout_flies"><i class="material-icons">question_mark</i><span class="info-box">Scout Flies are not randomized and can be collected at any time</span></label>
+                    </div>
+                    <div>
+                        <label class="check-box-container"><input type="checkbox" class="inits" name="exclude_misc_items"><span class="checkmark"></span>Exclude Miscellaneous</label>
+                        <label class="checkbox-info" name="exclude_misc_items"><i class="material-icons">question_mark</i><span class="info-box">Miscellaneous Tasks are not randomized and can be completed at any time</span></label>
+                    </div>
+                    <div>
+                        <label class="check-box-container"><input type="checkbox" class="inits" name="exclude_warp_buttons"><span class="checkmark"></span>Exclude Warp Buttons</label>
+                        <label class="checkbox-info" name="exclude_warp_buttons"><i class="material-icons">question_mark</i><span class="info-box">Warp Gate Buttons are not randomized and can (should) be pressed at any time</span></label>
+                    </div>
+                    <a id="seperator-line">Skips</a>
+                    <div>
+                        <label class="check-box-container"><input type="checkbox" class="inits" name="allow_fcs" checked><span class="checkmark"></span>Allow FCS</label>
+                        <label class="checkbox-info" name="allow_fcs"><i class="material-icons">question_mark</i><span class="info-box">Performing FCS may be required</span></label>
+                    </div>
+                    <div>
+                        <label class="check-box-container"><input type="checkbox" class="inits" name="allow_boulder_skip" checked><span class="checkmark"></span>Allow Boulder Skip</label>
+                        <label class="checkbox-info" name="allow_boulder_skip"><i class="material-icons">question_mark</i><span class="info-box">Performing Boulder Skip may be required</span></label>
+                    </div>
+                    <div>
+                        <label class="check-box-container"><input type="checkbox" class="inits" name="allow_lts" checked><span class="checkmark"></span>Allow LTS</label>
+                        <label class="checkbox-info" name="allow_lts"><i class="material-icons">question_mark</i><span class="info-box">Performing LTS may be required</span></label>
+                    </div>
+                    <div>
+                        <label class="check-box-container"><input type="checkbox" class="inits" name="allow_precursor_door_skip" checked><span class="checkmark"></span>Allow Precursor Door Skip</label>
+                        <label class="checkbox-info" name="allow_precursor_door_skip"><i class="material-icons">question_mark</i><span class="info-box">Skipping the Precursor Door in Geyser Rock may be required</span></label>
+                    </div>
+                    <div>
+                        <label class="check-box-container"><input type="checkbox" class="inits" name="allow_temple_deload" checked><span class="checkmark"></span>Allow Temple Deload</label>
+                        <label class="checkbox-info" name="allow_temple_deload"><i class="material-icons">question_mark</i><span class="info-box">Deloading Temple to get inside may be required</span></label>
+                    </div>
+                    <div>
+                        <label class="check-box-container"><input type="checkbox" class="inits" name="allow_temple_skip" checked><span class="checkmark"></span>Allow Temple Skip</label>
+                        <label class="checkbox-info" name="allow_temple_skip"><i class="material-icons">question_mark</i><span class="info-box">Beating Plant Boss before activating the Blue Vent Switch may be required</span></label>
+                    </div>
+                    <div>
+                        <label class="check-box-container"><input type="checkbox" class="inits" name="allow_leaving_temple_early" checked><span class="checkmark"></span>Allow Leaving Temple Early</label>
+                    <label class="checkbox-info" name="allow_leaving_temple_early"><i class="material-icons">question_mark</i><span class="info-box">Leaving Forbidden Temple before beating Plant Boss may be required</span></label>
+                    </div>
+                    <div>
+                        <label class="check-box-container"><input type="checkbox" class="inits" name="allow_locked_temple_skip" checked><span class="checkmark"></span>Allow Locked Temple Door Skip</label>
+                        <label class="checkbox-info" name="allow_locked_temple_skip"><i class="material-icons">question_mark</i><span class="info-box">Collecting the Power Cell before opening the locked temple door may be required</span></label>
+                    </div>
+                    <div>
+                        <label class="check-box-container"><input type="checkbox" class="inits" name="allow_tower_climb" checked><span class="checkmark"></span>Allow Tower Climb</label>
+                        <label class="checkbox-info" name="allow_tower_climb"><i class="material-icons">question_mark</i><span class="info-box">Climbing the cannon tower in Sentinel Beach without blue eco may be required</span></label>
+                    </div>
+                    <div>
+                        <label class="check-box-container"><input type="checkbox" class="inits" name="allow_on_foot_basin" checked><span class="checkmark"></span>Allow On Foot Basin</label>
+                        <label class="checkbox-info" name="allow_on_foot_basin"><i class="material-icons">question_mark</i><span class="info-box">Entering Precursor Basin without the zoomer may be required</span></label>
+                    </div>
+                    <div>
+                        <label class="check-box-container"><input type="checkbox" class="inits" name="allow_on_foot_race" checked><span class="checkmark"></span>Allow On Foot Race</label>
+                        <label class="checkbox-info" name="allow_on_foot_race"><i class="material-icons">question_mark</i><span class="info-box">Beating the record time on foot may be required</span></label>
+                    </div>
+                    <div>
+                        <label class="check-box-container"><input type="checkbox" class="inits" name="allow_button_clip" checked><span class="checkmark"></span>Allow Button Clip</label>
+                        <label class="checkbox-info" name="allow_button_clip"><i class="material-icons">question_mark</i><span class="info-box">Collecting the Power Cell before raising the sunken chamber may be required</span></label>
+                    </div>
+                    <div>
+                        <label class="check-box-container"><input type="checkbox" class="inits" name="allow_tree_stalagmite_hops" checked><span class="checkmark"></span>Allow Tree/Stalagmite Hops</label>
+                        <label class="checkbox-info" name="allow_tree_stalagmite_hops"><i class="material-icons">question_mark</i><span class="info-box">Performing Tree/Stalagmite Hops may be required</span></label>
+                    </div>
+                    <div>
+                        <label class="check-box-container"><input type="checkbox" class="inits" name="allow_backwards_mp" checked><span class="checkmark"></span>Allow Backwards MP</label>
+                        <label class="checkbox-info" name="allow_backwards_mp"><i class="material-icons">question_mark</i><span class="info-box">Going backwards without the zoomer in Mountain Pass may be required</span></label>
+                    </div>
+                    <div>
+                        <label class="check-box-container"><input type="checkbox" class="inits" name="allow_fort_gate_skip" checked><span class="checkmark"></span>Allow Fort Gate Skip</label>
+                        <label class="checkbox-info" name="allow_fort_gate_skip"><i class="material-icons">question_mark</i><span class="info-box">Entering Snowy Fort without opening the gate may be required</span></label>
+                    </div>
+                    <div>
+                        <label class="check-box-container"><input type="checkbox" class="inits" name="allow_oranges_skip" checked><span class="checkmark"></span>Allow Oranges Skip</label>
+                        <label class="checkbox-info" name="allow_oranges_skip"><i class="material-icons">question_mark</i><span class="info-box">Driving through Lava Tube without destroying Oranges may be required</span></label>
+                    </div>
+                    <div>
+                        <label class="check-box-container"><input type="checkbox" class="inits" name="allow_early_citadel" checked><span class="checkmark"></span>Allow Early Citadel</label>
+                        <label class="checkbox-info" name="allow_early_citadel"><i class="material-icons">question_mark</i><span class="info-box">Citadel Hops or deloading Citadel to enter may be required</span></label>
+                    </div>
+                    <div>
+                        <label class="check-box-container"><input type="checkbox" class="inits" name="allow_citadel_skip" checked><span class="checkmark"></span>Allow Citadel Skip</label>
+                        <label class="checkbox-info" name="allow_citadel_skip"><i class="material-icons">question_mark</i><span class="info-box">Performing Citadel Skip or v2 may be required</span></label>
+                    </div>
+                    </div>
+                    <button id="btn" class="button" onclick="runMain()">Generate Splits</button>
+                </div>
+            </div>
+            <div class="text-container help">
+                <h2>Guide</h2>
+                <p></p>
+                    <h3>Setup</h3>
+                    To use this randomizer you obviously need a copy of Jak And Daxter: The Precursor Legacy. If you want to play on PlayStation or on PC using
+                    <a class="link" href="https://opengoal.dev/" target="_blank">OpenGOAL</a> is yours to decide.
+                    If you run on OpenGOAL feel free to combine this randomizer with other mods.<br><br>
+                    I would also recommend using a <a class="link" href="https://livesplit.org/" target="_blank">LiveSplit</a> layout that only shows you the next objective
+                    you have to complete so there aren't any spoilers.
+                    You can either make one yourself or download a basic layout <a class="link" href="download/rco_layout.lsl" download>here</a>.
+                    <br><br>
+                    <h3>How it works</h3>
+                    <ul style="list-style-type: decimal; padding: 0 0 0 20px; margin: 0;">
+                        <li>Select a seed. You can either input a seed manually or click the small button next to it to generate a random one.</li>
+                        <li>Choose your set of rules. You can decide what gets randomized and what tricks and skips should be allowed.</li>
+                        <li>Generate your splits. Click the button below to generate a .lss file to load into LiveSplit.</li>
+                        <li>Read the hints section. Before starting I would recommend taking a look into the hints section of this guide.</li>
+                        <li>Have fun :)</li>
+                    </ul>
+                    <br>
+                    <h3>Hints</h3>
+                    Before starting to play I would advise you to read this section as it might help you with later struggles.
+                    <ul style="list-style-type: disc; padding: 0 0 0 20px; margin: 10px 0 0 0;">
+                        <li>Softlocks should almost never be possible regardless of your set of rules.</li>
+                        <li>If not including the Warp Gate Buttons you should immediately press them once available, as you might softlock yourself out of Snowy Mountain.</li>
+                        <li>Some of the rules might cause a lot of pain (e.g. Allow FCS will likely have you do it multiple times).</li>
+                        <li>All the collectibles are listed on the right. I would recommend taking a look at these before starting.</li>
+                        <li>When playing make sure to only do your current task. Everything not required to do so might be an objective for later.</li>
+                        <li>I would also recommend to save your game from time to time in case you accidentally collect something and have to reload.</li>
+                        <li>After a little bit of testing I would estimate a playtime of 8-10 hours. Altough I didn't include some of the more painful rules.</li>
+                    </ul>
+                    <br>
+                    <h3>Troubleshooting</h3>
+                    If there are any logical errors during your playtrough I found it feasable to skip that section and do it at a later point in time or ignore it completely.<br>
+                    If you encounter any logical or technical issues please let me know via <a class="link" href="https://discord.com/users/607868214566846467" target="_blank">Discord</a> and send me a copy of your splits including your settings and seed.<br>
+                    Lastly, I am no professional website designer. I hope it doesn't bother you if this site is a bit wonky at times.
+            </div>
+        </div>
+
+        <div id="main-right">
+            <div class="text-container">
+                <h2>Collectibles</h2>
+                <dl class="dropdown-menu">
+                    <!-- Geyser Rock -->
+                    <div>
+                        <dt class="dropdown-menu-item-title">Geyser Rock</dt>
+                        <dd class="dropdown-menu-item-data hide">
+                            <ul class="dropdown-submenu">
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Power Cells</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>Find The Cell On The Path</a></li>
+                                            <li class="dropdown-submenu-item"><a>Open The Precursor Door</a></li>
+                                            <li class="dropdown-submenu-item"><a>Climb Up The Cliff</a></li>
+                                            <li class="dropdown-submenu-item"><a>Free 7 Scout Flies</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Scout Flies</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>On Ground (Near Cell)</a></li>
+                                            <li class="dropdown-submenu-item"><a>On Ground (Far From Cell)</a></li>
+                                            <li class="dropdown-submenu-item"><a>On Left Ledge</a></li>
+                                            <li class="dropdown-submenu-item"><a>On Right Ledge</a></li>
+                                            <li class="dropdown-submenu-item"><a>On Middle Ledge (Left)</a></li>
+                                            <li class="dropdown-submenu-item"><a>On Middle Ledge (Right)</a></li>
+                                            <li class="dropdown-submenu-item"><a>On Top Ledge</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Miscellaneous</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>Open The Locked Precursor Door</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                            </ul>
+                        </dd>
+                    </div>
+                    <!-- Sandover Village -->
+                    <div>
+                        <dt class="dropdown-menu-item-title">Sandover Village</dt>
+                        <dd class="dropdown-menu-item-data hide">
+                            <ul class="dropdown-submenu">
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Power Cells</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>Bring 90 Orbs To The Mayor</a></li>
+                                            <li class="dropdown-submenu-item"><a>Bring 90 Orbs To Your Uncle</a></li>
+                                            <li class="dropdown-submenu-item"><a>Herd The Yakows Into Their Pen</a></li>
+                                            <li class="dropdown-submenu-item"><a>Bring 120 Orbs To The Oracle (x2)</a></li>
+                                            <li class="dropdown-submenu-item"><a>Free 7 Scout Flies</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Scout Flies</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>In Fisherman's House</a></li>
+                                            <li class="dropdown-submenu-item"><a>In Mayor's House</a></li>
+                                            <li class="dropdown-submenu-item"><a>In Farmer's House</a></li>
+                                            <li class="dropdown-submenu-item"><a>Near Oracle</a></li>
+                                            <li class="dropdown-submenu-item"><a>Under Bridge</a></li>
+                                            <li class="dropdown-submenu-item"><a>Behind Sculptor's House</a></li>
+                                            <li class="dropdown-submenu-item"><a>Overlooking Farmer's House</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Miscellaneous</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>Yakow Near Village</a></li>
+                                            <li class="dropdown-submenu-item"><a>Yakow Near Fields</a></li>
+                                            <li class="dropdown-submenu-item"><a>Yakow Near Water (Close)</a></li>
+                                            <li class="dropdown-submenu-item"><a>Yakow Near Water (Far)</a></li>
+                                            <li class="dropdown-submenu-item"><a>Yakow Near Forbidden Jungle</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                            </ul>
+                        </dd>
+                    </div>
+                    <!-- Sentinel Beach -->
+                    <div>
+                        <dt class="dropdown-menu-item-title">Sentinel Beach</dt>
+                        <dd class="dropdown-menu-item-data hide">
+                            <ul class="dropdown-submenu">
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Power Cells</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>Unblock The Eco Harvesters</a></li>
+                                            <li class="dropdown-submenu-item"><a>Push The Flut Flut Egg Off The Cliff</a></li>
+                                            <li class="dropdown-submenu-item"><a>Get The Power Cell From The Pelican</a></li>
+                                            <li class="dropdown-submenu-item"><a>Chase The Seagulls</a></li>
+                                            <li class="dropdown-submenu-item"><a>Launch Up To The Cannon Tower</a></li>
+                                            <li class="dropdown-submenu-item"><a>Explore The Beach</a></li>
+                                            <li class="dropdown-submenu-item"><a>Climb The Sentinel</a></li>
+                                            <li class="dropdown-submenu-item"><a>Free 7 Scout Flies</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Scout Flies</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>At Entrance</a></li>
+                                            <li class="dropdown-submenu-item"><a>Overlooking Locked Boxes</a></li>
+                                            <li class="dropdown-submenu-item"><a>On Path To Flut Flut</a></li>
+                                            <li class="dropdown-submenu-item"><a>Under Wood Pillars</a></li>
+                                            <li class="dropdown-submenu-item"><a>On Sentinel</a></li>
+                                            <li class="dropdown-submenu-item"><a>Overlooking Blue Eco Vent</a></li>
+                                            <li class="dropdown-submenu-item"><a>Overlooking Green Eco Vents</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Miscellaneous</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>Stop The Shooting Cannon</a></li>
+                                            <li class="dropdown-submenu-item"><a>Chase Seagulls 1st Time</a></li>
+                                            <li class="dropdown-submenu-item"><a>Chase Seagulls 2nd Time</a></li>
+                                            <li class="dropdown-submenu-item"><a>Chase Seagulls 3rd Time</a></li>
+                                            <li class="dropdown-submenu-item"><a>Push Flut Flut Egg</a></li>
+                                            <li class="dropdown-submenu-item"><a>Harvester On Ground Level</a></li>
+                                            <li class="dropdown-submenu-item"><a>Harvester On 1st Level</a></li>
+                                            <li class="dropdown-submenu-item"><a>Harvester On 2nd Level</a></li>
+                                            <li class="dropdown-submenu-item"><a>Harvester On 3rd Level</a></li>
+                                            <li class="dropdown-submenu-item"><a>Harvester On 4th Level</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                            </ul>
+                        </dd>
+                    </div>
+                    <!-- Forbidden Jungle -->
+                    <div>
+                        <dt class="dropdown-menu-item-title">Forbidden Jungle</dt>
+                        <dd class="dropdown-menu-item-data hide">
+                            <ul class="dropdown-submenu">
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Power Cells</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>Connect The Eco Beams</a></li>
+                                            <li class="dropdown-submenu-item"><a>Get To The Top Of The Temple</a></li>
+                                            <li class="dropdown-submenu-item"><a>Find The Blue Vent Switch</a></li>
+                                            <li class="dropdown-submenu-item"><a>Defeat The Dark Eco Plant</a></li>
+                                            <li class="dropdown-submenu-item"><a>Catch 200 Pounds Of Fish</a></li>
+                                            <li class="dropdown-submenu-item"><a>Follow The Canyon To The Sea</a></li>
+                                            <li class="dropdown-submenu-item"><a>Open The Locked Temple Door</a></li>
+                                            <li class="dropdown-submenu-item"><a>Free 7 Scout Flies</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Scout Flies</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>At End Of Path</a></li>
+                                            <li class="dropdown-submenu-item"><a>On Spiral Of Stumps</a></li>
+                                            <li class="dropdown-submenu-item"><a>Behind Lurker Machine</a></li>
+                                            <li class="dropdown-submenu-item"><a>At End Of River</a></li>
+                                            <li class="dropdown-submenu-item"><a>Around Temple Spire</a></li>
+                                            <li class="dropdown-submenu-item"><a>On Top Of Temple</a></li>
+                                            <li class="dropdown-submenu-item"><a>Near Dark Eco Boxes</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Miscellaneous</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>Destroy Mirror</a></li>
+                                            <li class="dropdown-submenu-item"><a>Connect A Mirror (x5)</a></li>
+                                            <li class="dropdown-submenu-item"><a>Construct Bridge To Temple</a></li>
+                                            <li class="dropdown-submenu-item"><a>Beat Plant Boss</a></li>
+                                            <li class="dropdown-submenu-item"><a>Open Locked Temple Door</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                            </ul>
+                        </dd>
+                    </div>
+                    <!-- Misty Island -->
+                    <div>
+                        <dt class="dropdown-menu-item-title">Misty Island</dt>
+                        <dd class="dropdown-menu-item-data hide">
+                            <ul class="dropdown-submenu">
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Power Cells</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                       <li class="dropdown-submenu-item"><a>Catch The Sculptor's Muse</a></li>
+                                            <li class="dropdown-submenu-item"><a>Climb The Lurker Ship</a></li>
+                                            <li class="dropdown-submenu-item"><a>Stop The Cannon</a></li>
+                                            <li class="dropdown-submenu-item"><a>Return To The Dark Eco Pool</a></li>
+                                            <li class="dropdown-submenu-item"><a>Destroy The Balloon Lurkers</a></li>
+                                            <li class="dropdown-submenu-item"><a>Use The Zoomer To Reach Power Cell</a></li>
+                                            <li class="dropdown-submenu-item"><a>Use Blue Eco To Reach Power Cell</a></li>
+                                            <li class="dropdown-submenu-item"><a>Free 7 Scout Flies</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Scout Flies</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>Overlooking Entrance</a></li>
+                                            <li class="dropdown-submenu-item"><a>On Zoomer Ramps</a></li>
+                                            <li class="dropdown-submenu-item"><a>On Ledge Near Arena Exit</a></li>
+                                            <li class="dropdown-submenu-item"><a>On Ledge Near Arena Entrance</a></li>
+                                            <li class="dropdown-submenu-item"><a>Near Arena Door</a></li>
+                                            <li class="dropdown-submenu-item"><a>On Ship</a></li>
+                                            <li class="dropdown-submenu-item"><a>On Barrel Ramps</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Miscellaneous</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>Stop The Shooting Cannon</a></li>
+                                            <li class="dropdown-submenu-item"><a>Catch Muse</a></li>
+                                            <li class="dropdown-submenu-item"><a>Defeat The Ambush</a></li>
+                                            <li class="dropdown-submenu-item"><a>Stop The Balloon Lurkers</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                            </ul>
+                        </dd>
+                    </div>
+                    <!-- Fire Canyon -->
+                    <div>
+                        <dt class="dropdown-menu-item-title">Fire Canyon</dt>
+                        <dd class="dropdown-menu-item-data hide">
+                            <ul class="dropdown-submenu">
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Power Cells</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>Reach The End Of Fire Canyon</a></li>
+                                            <li class="dropdown-submenu-item"><a>Free 7 Scout Flies</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Scout Flies</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>1st Scout Fly</a></li>
+                                            <li class="dropdown-submenu-item"><a>2nd Scout Fly</a></li>
+                                            <li class="dropdown-submenu-item"><a>3rd Scout Fly</a></li>
+                                            <li class="dropdown-submenu-item"><a>4th Scout Fly</a></li>
+                                            <li class="dropdown-submenu-item"><a>5th Scout Fly</a></li>
+                                            <li class="dropdown-submenu-item"><a>6th Scout Fly</a></li>
+                                            <li class="dropdown-submenu-item"><a>7th Scout Fly</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                            </ul>
+                        </dd>
+                    </div>
+                    <!-- Rock Village -->
+                    <div>
+                        <dt class="dropdown-menu-item-title">Rock Village</dt>
+                        <dd class="dropdown-menu-item-data hide">
+                            <ul class="dropdown-submenu">
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Power Cells</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>Bring 90 Orbs To The Gambler</a></li>
+                                            <li class="dropdown-submenu-item"><a>Bring 90 Orbs To The Warrior</a></li>
+                                            <li class="dropdown-submenu-item"><a>Bring 90 Orbs To The Geologist</a></li>
+                                            <li class="dropdown-submenu-item"><a>Bring 120 Orbs To The Oracle (x2)</a></li>
+                                            <li class="dropdown-submenu-item"><a>Free 7 Scout Flies</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Scout Flies</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>Behind Sage's Hut</a></li>
+                                            <li class="dropdown-submenu-item"><a>Near Waterfall</a></li>
+                                            <li class="dropdown-submenu-item"><a>Behind Geologist</a></li>
+                                            <li class="dropdown-submenu-item"><a>Behind Fiery Boulder</a></li>
+                                            <li class="dropdown-submenu-item"><a>On Dock</a></li>
+                                            <li class="dropdown-submenu-item"><a>At Boggy Swamp Entrance</a></li>
+                                            <li class="dropdown-submenu-item"><a>At Pontoon Bridge</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Miscellaneous</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>Press The Blue Warp Gate Button</a></li>
+                                            <li class="dropdown-submenu-item"><a>Lift Boulder</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                            </ul>
+                        </dd>
+                    </div>
+                    <!-- Lost Precursor City -->
+                    <div>
+                        <dt class="dropdown-menu-item-title">Lost Precursor City</dt>
+                        <dd class="dropdown-menu-item-data hide">
+                            <ul class="dropdown-submenu">
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Power Cells</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>Raise The Chamber</a></li>
+                                            <li class="dropdown-submenu-item"><a>Follow The Coloured Pipes</a></li>
+                                            <li class="dropdown-submenu-item"><a>Reach The Bottom Of The City</a></li>
+                                            <li class="dropdown-submenu-item"><a>Quickly Cross The Dangerous Pool</a></li>
+                                            <li class="dropdown-submenu-item"><a>Match The Platform Colours</a></li>
+                                            <li class="dropdown-submenu-item"><a>Climb The Slide Tube</a></li>
+                                            <li class="dropdown-submenu-item"><a>Reach The Center Of The Complex</a></li>
+                                            <li class="dropdown-submenu-item"><a>Free 7 Scout Flies</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Scout Flies</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>First Room</a></li>
+                                            <li class="dropdown-submenu-item"><a>Before Second Room</a></li>
+                                            <li class="dropdown-submenu-item"><a>Second Room Near Orb Vent</a></li>
+                                            <li class="dropdown-submenu-item"><a>Second Room (Green Pipe)</a></li>
+                                            <li class="dropdown-submenu-item"><a>Second Room (Blue Pipe)</a></li>
+                                            <li class="dropdown-submenu-item"><a>Second Room On Path To Cell</a></li>
+                                            <li class="dropdown-submenu-item"><a>Across Steam Vents</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Miscellaneous</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>Open The Sunken Chamber</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                            </ul>
+                        </dd>
+                    </div>
+                    <!-- Boggy Swamp -->
+                    <div>
+                        <dt class="dropdown-menu-item-title">Boggy Swamp</dt>
+                        <dd class="dropdown-menu-item-data hide">
+                            <ul class="dropdown-submenu">
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Power Cells</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>Ride The Flut Flut</a></li>
+                                            <li class="dropdown-submenu-item"><a>Protect Farthy's Snacks</a></li>
+                                            <li class="dropdown-submenu-item"><a>Defeat The Lurker Ambush</a></li>
+                                            <li class="dropdown-submenu-item"><a>Break The 1st Tether On The Zeppelin</a></li>
+                                            <li class="dropdown-submenu-item"><a>Break The 2nd Tether On The Zeppelin</a></li>
+                                            <li class="dropdown-submenu-item"><a>Break The 3rd Tether On The Zeppelin</a></li>
+                                            <li class="dropdown-submenu-item"><a>Break The 4th Tether On The Zeppelin</a></li>
+                                            <li class="dropdown-submenu-item"><a>Free 7 Scout Flies</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Scout Flies</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>Near Entrance</a></li>
+                                            <li class="dropdown-submenu-item"><a>Over First Jump Pad</a></li>
+                                            <li class="dropdown-submenu-item"><a>Over Second Jump Pad</a></li>
+                                            <li class="dropdown-submenu-item"><a>Across Black Swamp</a></li>
+                                            <li class="dropdown-submenu-item"><a>Overlooking Flut Flut</a></li>
+                                            <li class="dropdown-submenu-item"><a>On Flut Flut Platforms</a></li>
+                                            <li class="dropdown-submenu-item"><a>In Field Of Boxes</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Miscellaneous</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>Shoot 1st Boulder</a></li>
+                                            <li class="dropdown-submenu-item"><a>Shoot 2nd Boulder</a></li>
+                                            <li class="dropdown-submenu-item"><a>Shoot 3rd Boulder</a></li>
+                                            <li class="dropdown-submenu-item"><a>Shoot 4th Boulder</a></li>
+                                            <li class="dropdown-submenu-item"><a>Shoot Boulder Blocking Jump Pad</a></li>
+                                            <li class="dropdown-submenu-item"><a>Defeat Ambush</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                            </ul>
+                        </dd>
+                    </div>
+                    <!-- Precursor Basin -->
+                    <div>
+                        <dt class="dropdown-menu-item-title">Precursor Basin</dt>
+                        <dd class="dropdown-menu-item-data hide">
+                            <ul class="dropdown-submenu">
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Power Cells</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>Herd The Moles Into Their Hole</a></li>
+                                            <li class="dropdown-submenu-item"><a>Catch The Flying Lurkers</a></li>
+                                            <li class="dropdown-submenu-item"><a>Beat The Record Time On The Gorge</a></li>
+                                            <li class="dropdown-submenu-item"><a>Get The Power Cell Over The Lake</a></li>
+                                            <li class="dropdown-submenu-item"><a>Cure Dark Eco Infected Plants</a></li>
+                                            <li class="dropdown-submenu-item"><a>Navigate The Purple Precursor Rings</a></li>
+                                            <li class="dropdown-submenu-item"><a>Navigate The Blue Precursor Rings</a></li>
+                                            <li class="dropdown-submenu-item"><a>Free 7 Scout Flies</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Scout Flies</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>At Purple Ring Start</a></li>
+                                            <li class="dropdown-submenu-item"><a>Overlooking Entrance</a></li>
+                                            <li class="dropdown-submenu-item"><a>At Blue Ring Start</a></li>
+                                            <li class="dropdown-submenu-item"><a>Before Big Jump</a></li>
+                                            <li class="dropdown-submenu-item"><a>Near Dark Eco Plant (Below)</a></li>
+                                            <li class="dropdown-submenu-item"><a>Near Dark Eco Plant (Above)</a></li>
+                                            <li class="dropdown-submenu-item"><a>Near Mole Hole</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Miscellaneous</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>Flying Lurker Near Plants</a></li>
+                                            <li class="dropdown-submenu-item"><a>Flying Lurker Near Pillars</a></li>
+                                            <li class="dropdown-submenu-item"><a>Flying Lurker Near Purple Rings</a></li>
+                                            <li class="dropdown-submenu-item"><a>Flying Lurker Near Entrance</a></li>
+                                            <li class="dropdown-submenu-item"><a>Herd A Mole (x4)</a></li>
+                                            <li class="dropdown-submenu-item"><a>Cure The Plants</a></li>
+                                            <li class="dropdown-submenu-item"><a>Beat The Purple Rings</a></li>
+                                            <li class="dropdown-submenu-item"><a>Beat The Blue Rings</a></li>
+                                            <li class="dropdown-submenu-item"><a>Beat The Record Time</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                            </ul>
+                        </dd>
+                    </div>
+                    <!-- Mountain Pass -->
+                    <div>
+                        <dt class="dropdown-menu-item-title">Mountain Pass</dt>
+                        <dd class="dropdown-menu-item-data hide">
+                            <ul class="dropdown-submenu">
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Power Cells</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>Defeat Klaww</a></li>
+                                            <li class="dropdown-submenu-item"><a>Find The Hidden Power Cell</a></li>
+                                            <li class="dropdown-submenu-item"><a>Reach The End Of The Mountain Pass</a></li>
+                                            <li class="dropdown-submenu-item"><a>Free 7 Scout Flies</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Scout Flies</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>1st Scout Fly</a></li>
+                                            <li class="dropdown-submenu-item"><a>2nd Scout Fly</a></li>
+                                            <li class="dropdown-submenu-item"><a>3rd Scout Fly</a></li>
+                                            <li class="dropdown-submenu-item"><a>4th Scout Fly</a></li>
+                                            <li class="dropdown-submenu-item"><a>5th Scout Fly</a></li>
+                                            <li class="dropdown-submenu-item"><a>6th Scout Fly</a></li>
+                                            <li class="dropdown-submenu-item"><a>7th Scout Fly</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Miscellaneous</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>Stop Klaww</a></li>
+                                            <li class="dropdown-submenu-item"><a>Stop The Bomb Lurker</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                            </ul>
+                        </dd>
+                    </div>
+                    <!-- Volcanic Crater -->
+                    <div>
+                        <dt class="dropdown-menu-item-title">Volcanic Crater</dt>
+                        <dd class="dropdown-menu-item-data hide">
+                            <ul class="dropdown-submenu">
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Power Cells</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>Bring 90 Orbs To The Miners (x4)</a></li>
+                                            <li class="dropdown-submenu-item"><a>Bring 120 Orbs To The Oracle (x2)</a></li>
+                                            <li class="dropdown-submenu-item"><a>Find The Hidden Power Cell</a></li>
+                                            <li class="dropdown-submenu-item"><a>Free 7 Scout Flies</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Scout Flies</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>Near Mountain Pass</a></li>
+                                            <li class="dropdown-submenu-item"><a>In Miner's Cave</a></li>
+                                            <li class="dropdown-submenu-item"><a>Near Oracle</a></li>
+                                            <li class="dropdown-submenu-item"><a>On Stone Platforms</a></li>
+                                            <li class="dropdown-submenu-item"><a>Near Lava Tube</a></li>
+                                            <li class="dropdown-submenu-item"><a>At Minecart Junction</a></li>
+                                            <li class="dropdown-submenu-item"><a>Near Spider Cave</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Miscellaneous</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>Press The Red Warp Gate Button</a></li>
+                                            <li class="dropdown-submenu-item"><a>Destroy The Hidden Crate</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                            </ul>
+                        </dd>
+                    </div>
+                    <!-- Snowy Mountain -->
+                    <div>
+                        <dt class="dropdown-menu-item-title">Snowy Mountain</dt>
+                        <dd class="dropdown-menu-item-data hide">
+                            <ul class="dropdown-submenu">
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Power Cells</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>Find The Yellow Vent Switch</a></li>
+                                            <li class="dropdown-submenu-item"><a>Stop The 3 Lurker Glacier Troops</a></li>
+                                            <li class="dropdown-submenu-item"><a>Deactivate The Precursor Blockers</a></li>
+                                            <li class="dropdown-submenu-item"><a>Open The Frozen Crate</a></li>
+                                            <li class="dropdown-submenu-item"><a>Get Through The Lurker Fort</a></li>
+                                            <li class="dropdown-submenu-item"><a>Open The Lurker Fort Gate</a></li>
+                                            <li class="dropdown-submenu-item"><a>Survive The Lurker-Infested Cave</a></li>
+                                            <li class="dropdown-submenu-item"><a>Free 7 Scout Flies</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Scout Flies</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>Near Entrance</a></li>
+                                            <li class="dropdown-submenu-item"><a>Under Bridge To Fort</a></li>
+                                            <li class="dropdown-submenu-item"><a>On Cliff Near Flut Flut</a></li>
+                                            <li class="dropdown-submenu-item"><a>Near Yellow Eco Switch</a></li>
+                                            <li class="dropdown-submenu-item"><a>Near Frozen Box</a></li>
+                                            <li class="dropdown-submenu-item"><a>On Top Of Fort Tower</a></li>
+                                            <li class="dropdown-submenu-item"><a>On Top Of Fort</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Miscellaneous</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>Destroy Frozen Crate</a></li>
+                                            <li class="dropdown-submenu-item"><a>Activate The Fort Elevator</a></li>
+                                            <li class="dropdown-submenu-item"><a>Glacier Troop Near Flut Flut</a></li>
+                                            <li class="dropdown-submenu-item"><a>Glacier Troop Near Snow Balls</a></li>
+                                            <li class="dropdown-submenu-item"><a>Glacier Troop In Cave</a></li>
+                                            <li class="dropdown-submenu-item"><a>Blocker Near Gondola</a></li>
+                                            <li class="dropdown-submenu-item"><a>Blocker Near Snow Balls (Left)</a></li>
+                                            <li class="dropdown-submenu-item"><a>Blocker Near Snow Balls (Right)</a></li>
+                                            <li class="dropdown-submenu-item"><a>Blocker Near Hidden Entrance</a></li>
+                                            <li class="dropdown-submenu-item"><a>Blocker In Lurker Cave</a></li>
+                                            <li class="dropdown-submenu-item"><a>Blocker Near Bridge To Lurker Cave</a></li>
+                                            <li class="dropdown-submenu-item"><a>Blocker On Platform To Lurker Cave (Left)</a></li>
+                                            <li class="dropdown-submenu-item"><a>Blocker On Platform To Lurker Cave (Right)</a></li>
+                                            <li class="dropdown-submenu-item"><a>Blocker Near First Bridge (To The Left)</a></li>
+                                            <li class="dropdown-submenu-item"><a>Blocker Above Switch On Ice</a></li>
+                                            <li class="dropdown-submenu-item"><a>Blocker Above Switch Near Slide</a></li>
+                                            <li class="dropdown-submenu-item"><a>Blocker Above Switch Near Metal Boxes</a></li>
+                                            <li class="dropdown-submenu-item"><a>Blocker Above Switch Across Eco Vent</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                            </ul>
+                        </dd>
+                    </div>
+                    <!-- Spider Cave -->
+                    <div>
+                        <dt class="dropdown-menu-item-title">Spider Cave</dt>
+                        <dd class="dropdown-menu-item-data hide">
+                            <ul class="dropdown-submenu">
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Power Cells</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>Shoot The Gnawing Lurkers</a></li>
+                                            <li class="dropdown-submenu-item"><a>Destroy The Dark Eco Crystals</a></li>
+                                            <li class="dropdown-submenu-item"><a>Explore The Dark Cave</a></li>
+                                            <li class="dropdown-submenu-item"><a>Climb The Giant Robot</a></li>
+                                            <li class="dropdown-submenu-item"><a>Launch To The Poles</a></li>
+                                            <li class="dropdown-submenu-item"><a>Navigate The Spider Tunnel</a></li>
+                                            <li class="dropdown-submenu-item"><a>Climb The Precursor Platforms</a></li>
+                                            <li class="dropdown-submenu-item"><a>Free 7 Scout Flies</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Scout Flies</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>Main Cave Overlooking Entrance</a></li>
+                                            <li class="dropdown-submenu-item"><a>Main Cave Near Robot Cave Entrance</a></li>
+                                            <li class="dropdown-submenu-item"><a>Near Dark Cave Entrance</a></li>
+                                            <li class="dropdown-submenu-item"><a>In Dark Cave</a></li>
+                                            <li class="dropdown-submenu-item"><a>Main Cave Near Dark Crystal</a></li>
+                                            <li class="dropdown-submenu-item"><a>Robot Cave (Bottom Level)</a></li>
+                                            <li class="dropdown-submenu-item"><a>Robot Cave (Top Level)</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Miscellaneous</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>Lurker On Ground Near Entrance</a></li>
+                                            <li class="dropdown-submenu-item"><a>Lurker On Ground On Island</a></li>
+                                            <li class="dropdown-submenu-item"><a>Lurker On Ground Across Eco River</a></li>
+                                            <li class="dropdown-submenu-item"><a>Lurker On 2nd Level Near Dark Cave</a></li>
+                                            <li class="dropdown-submenu-item"><a>Lurker On 2nd Level To Left (Lower)</a></li>
+                                            <li class="dropdown-submenu-item"><a>Lurker On 2nd Level To Left (Upper)</a></li>
+                                            <li class="dropdown-submenu-item"><a>Lurker On 2nd Level To Right</a></li>
+                                            <li class="dropdown-submenu-item"><a>Lurker On Wooden Platform (Lower)</a></li>
+                                            <li class="dropdown-submenu-item"><a>Lurker On Wooden Platform (Upper)</a></li>
+                                            <li class="dropdown-submenu-item"><a>Crystal In Dark Cave</a></li>
+                                            <li class="dropdown-submenu-item"><a>Crystal Near Robot Room</a></li>
+                                            <li class="dropdown-submenu-item"><a>Crystal Under The Ceiling</a></li>
+                                            <li class="dropdown-submenu-item"><a>Crystal Near Dark Cave (In Water)</a></li>
+                                            <li class="dropdown-submenu-item"><a>Crystal Near Dark Cave (On Ledge)</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                            </ul>
+                        </dd>
+                    </div>
+                    <!-- Lava Tube -->
+                    <div>
+                        <dt class="dropdown-menu-item-title">Lava Tube</dt>
+                        <dd class="dropdown-menu-item-data hide">
+                            <ul class="dropdown-submenu">
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Power Cells</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>Reach The End Of The Lava Tube</a></li>
+                                            <li class="dropdown-submenu-item"><a>Free 7 Scout Flies</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Scout Flies</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>1st Scout Fly</a></li>
+                                            <li class="dropdown-submenu-item"><a>2nd Scout Fly</a></li>
+                                            <li class="dropdown-submenu-item"><a>3rd Scout Fly</a></li>
+                                            <li class="dropdown-submenu-item"><a>4th Scout Fly</a></li>
+                                            <li class="dropdown-submenu-item"><a>5th Scout Fly</a></li>
+                                            <li class="dropdown-submenu-item"><a>6th Scout Fly</a></li>
+                                            <li class="dropdown-submenu-item"><a>7th Scout Fly</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Miscellaneous</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>Destroy Oranges</a></li>
+                                            <li class="dropdown-submenu-item"><a>Press Citadel Warp Gate Button</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                            </ul>
+                        </dd>
+                    </div>
+                    <!-- Gol And Maia's Citadel -->
+                    <div>
+                        <dt class="dropdown-menu-item-title">Gol And Maia's Citadel</dt>
+                        <dd class="dropdown-menu-item-data hide">
+                            <ul class="dropdown-submenu">
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Power Cells</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>Free The Yellow Sage</a></li>
+                                            <li class="dropdown-submenu-item"><a>Free The Red Sage</a></li>
+                                            <li class="dropdown-submenu-item"><a>Free The Blue Sage</a></li>
+                                            <li class="dropdown-submenu-item"><a>Free The Green Sage</a></li>
+                                            <li class="dropdown-submenu-item"><a>Free 7 Scout Flies</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Scout Flies</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>At Entrance</a></li>
+                                            <li class="dropdown-submenu-item"><a>Before Jumping Lurkers</a></li>
+                                            <li class="dropdown-submenu-item"><a>Main Room Left Of Robot</a></li>
+                                            <li class="dropdown-submenu-item"><a>At Launch Pad Room</a></li>
+                                            <li class="dropdown-submenu-item"><a>At Blast Furnace</a></li>
+                                            <li class="dropdown-submenu-item"><a>Main Room Right Of Robot</a></li>
+                                            <li class="dropdown-submenu-item"><a>Top Of Rotating Tower</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                                <div>
+                                    <dt class="dropdown-menu-item-title sub">Miscellaneous</dt>
+                                    <dd class="dropdown-menu-item-data hide">
+                                        <ul class="dropdown-submenu">
+                                            <li class="dropdown-submenu-item"><a>Destroy Jumping Lurker Spawners</a></li>
+                                            <li class="dropdown-submenu-item"><a>Final Boss</a></li>
+                                        </ul>
+                                    </dd>
+                                </div>
+                            </ul>
+                        </dd>
+                    </div>
+                </dl>
+            </div>
+        </div>
+    </div>
+    
+</body>
+<script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
+<script src="script.js"></script>
+</html>
