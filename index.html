@@ -18,14 +18,20 @@
     <!-- info-image -->
     <div id="info-image"></div>
     <!-- Header -->
+    <div class="background"></div>
     <div id="gradient-header"></div>
     <div id="header">
         <div>
             <img id="header-icon" src="img/power_cell_red.png">
-            <h1>Random Collectibles Order (</h1>
-            <h1>RCO</h1>
-            <img src="img/+_red.png" style="margin: 0 -5px;">
-            <h1>)</h1>
+            <div id="big-header">
+                <h1>Random Collectibles Order (</h1>
+                <h1>RCO</h1>
+                <img src="img/+_red.png" style="margin: 0 -5px;">
+                <h1>)</h1>
+            </div>
+            <div id="small-header">
+                <h1>Random Collectibles Order</h1>
+            </div>
         </div>
         <div>
             <a href="https://livesplit.org/" target="_blank"><img src="img/livesplit_logo_red.png"></a>
@@ -45,6 +51,43 @@
                     (e.g., connecting mirrors, pressing buttons, beating bosses) in a specific order. As you not only have to complete more objectives but also a larger variety of them
                     this randomizer will have you revisiting and backtracking a lot and it will most likely come with a great deal of pain.<br><br>
                     There may or may not be further updates in the future regarding small red eggs...
+            </div>
+            <div class="text-container help">
+                <h2>Guide</h2>
+                <p></p>
+                    <h3>Setup</h3>
+                    To use this randomizer you obviously need a copy of Jak And Daxter: The Precursor Legacy. If you want to play on PlayStation or on PC using
+                    <a class="link" href="https://opengoal.dev/" target="_blank">OpenGOAL</a> is yours to decide.
+                    If you run on OpenGOAL feel free to combine this randomizer with other mods.<br><br>
+                    I would also recommend using a <a class="link" href="https://livesplit.org/" target="_blank">LiveSplit</a> layout that only shows you the next objective
+                    you have to complete so there aren't any spoilers.
+                    You can either make one yourself or download a basic layout <a class="link" href="download/rco_layout.lsl" download>here</a>.
+                    <br><br>
+                    <h3>How it works</h3>
+                    <ul style="list-style-type: decimal; padding: 0 0 0 20px; margin: 0;">
+                        <li>Select a seed. You can either input a seed manually or click the small button next to it to generate a random one.</li>
+                        <li>Choose your set of rules. You can decide what gets randomized and what tricks and skips should be allowed.</li>
+                        <li>Generate your splits. Click the button below to generate a .lss file to load into LiveSplit.</li>
+                        <li>Read the hints section. Before starting I would recommend taking a look into the hints section of this guide.</li>
+                        <li>Have fun :)</li>
+                    </ul>
+                    <br>
+                    <h3>Hints</h3>
+                    Before starting to play I would advise you to read this section as it might help you with later struggles.
+                    <ul style="list-style-type: disc; padding: 0 0 0 20px; margin: 10px 0 0 0;">
+                        <li>Softlocks should almost never be possible regardless of your set of rules.</li>
+                        <li>If not including the Warp Gate Buttons you should immediately press them once available, as you might softlock yourself out of Snowy Mountain.</li>
+                        <li>Some of the rules might cause a lot of pain (e.g. Allow FCS will likely have you do it multiple times).</li>
+                        <li>All the collectibles are listed on the right. I would recommend taking a look at these before starting.</li>
+                        <li>When playing make sure to only do your current task. Everything not required to do so might be an objective for later.</li>
+                        <li>I would also recommend to save your game from time to time in case you accidentally collect something and have to reload.</li>
+                        <li>After a little bit of testing I would estimate a playtime of 8-10 hours. Altough I didn't include some of the more painful rules.</li>
+                    </ul>
+                    <br>
+                    <h3>Troubleshooting</h3>
+                    If there are any logical errors during your playtrough I found it feasable to skip that section and do it at a later point in time or ignore it completely.<br>
+                    If you encounter any logical or technical issues please let me know via <a class="link" href="https://discord.com/users/607868214566846467" target="_blank">Discord</a> and send me a copy of your splits including your settings and seed.<br>
+                    Lastly, I am no professional website designer. I hope it doesn't bother you if this site is a bit wonky at times.
             </div>
             <div class="settings">
                 <div class="text-container">
@@ -157,43 +200,7 @@
                     <button id="btn" class="button" onclick="runMain()">Generate Splits</button>
                 </div>
             </div>
-            <div class="text-container help">
-                <h2>Guide</h2>
-                <p></p>
-                    <h3>Setup</h3>
-                    To use this randomizer you obviously need a copy of Jak And Daxter: The Precursor Legacy. If you want to play on PlayStation or on PC using
-                    <a class="link" href="https://opengoal.dev/" target="_blank">OpenGOAL</a> is yours to decide.
-                    If you run on OpenGOAL feel free to combine this randomizer with other mods.<br><br>
-                    I would also recommend using a <a class="link" href="https://livesplit.org/" target="_blank">LiveSplit</a> layout that only shows you the next objective
-                    you have to complete so there aren't any spoilers.
-                    You can either make one yourself or download a basic layout <a class="link" href="download/rco_layout.lsl" download>here</a>.
-                    <br><br>
-                    <h3>How it works</h3>
-                    <ul style="list-style-type: decimal; padding: 0 0 0 20px; margin: 0;">
-                        <li>Select a seed. You can either input a seed manually or click the small button next to it to generate a random one.</li>
-                        <li>Choose your set of rules. You can decide what gets randomized and what tricks and skips should be allowed.</li>
-                        <li>Generate your splits. Click the button below to generate a .lss file to load into LiveSplit.</li>
-                        <li>Read the hints section. Before starting I would recommend taking a look into the hints section of this guide.</li>
-                        <li>Have fun :)</li>
-                    </ul>
-                    <br>
-                    <h3>Hints</h3>
-                    Before starting to play I would advise you to read this section as it might help you with later struggles.
-                    <ul style="list-style-type: disc; padding: 0 0 0 20px; margin: 10px 0 0 0;">
-                        <li>Softlocks should almost never be possible regardless of your set of rules.</li>
-                        <li>If not including the Warp Gate Buttons you should immediately press them once available, as you might softlock yourself out of Snowy Mountain.</li>
-                        <li>Some of the rules might cause a lot of pain (e.g. Allow FCS will likely have you do it multiple times).</li>
-                        <li>All the collectibles are listed on the right. I would recommend taking a look at these before starting.</li>
-                        <li>When playing make sure to only do your current task. Everything not required to do so might be an objective for later.</li>
-                        <li>I would also recommend to save your game from time to time in case you accidentally collect something and have to reload.</li>
-                        <li>After a little bit of testing I would estimate a playtime of 8-10 hours. Altough I didn't include some of the more painful rules.</li>
-                    </ul>
-                    <br>
-                    <h3>Troubleshooting</h3>
-                    If there are any logical errors during your playtrough I found it feasable to skip that section and do it at a later point in time or ignore it completely.<br>
-                    If you encounter any logical or technical issues please let me know via <a class="link" href="https://discord.com/users/607868214566846467" target="_blank">Discord</a> and send me a copy of your splits including your settings and seed.<br>
-                    Lastly, I am no professional website designer. I hope it doesn't bother you if this site is a bit wonky at times.
-            </div>
+            
         </div>
 
         <div id="main-right">

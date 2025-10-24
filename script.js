@@ -96,7 +96,7 @@ function showAreaInfo(e) {
     name = name.replaceAll(" ", "_").replaceAll('(', '').replaceAll(')', '').replaceAll("'", "").toLowerCase();
     var path = area.concat("/").concat(name).concat(".png");
 
-    const x = menuElement.getBoundingClientRect().x + menuElement.getBoundingClientRect().width - areaInfoDisplay.getBoundingClientRect().width / 2 - 20;
+    const x = menuElement.getBoundingClientRect().x + menuElement.getBoundingClientRect().width - areaInfoDisplay.getBoundingClientRect().width / 1.5;
     const y = menuElement.getBoundingClientRect().y + (menuElement.getBoundingClientRect().height / 2 - areaInfoDisplay.getBoundingClientRect().height / 2 + window.scrollY);
 
     areaInfoDisplay.style.backgroundImage = "url(img/info/" + path + ")";
