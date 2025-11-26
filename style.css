@@ -1,7 +1,8 @@
 /* Fonts */
 @font-face {
     font-family: Jak;
-    src: url('fonts/Jak.ttf');
+    src: url('/fonts/Jak.woff2') format('woff2'),
+         url('/fonts/Jak.woff') format('woff');
     font-weight: normal;
     font-style: normal;
 }
