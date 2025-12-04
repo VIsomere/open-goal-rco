@@ -21,6 +21,7 @@
 * {
     box-sizing: border-box;
 }
+
 body {
     margin: 0;
     font-family: sans-serif;
@@ -31,7 +32,9 @@ body {
     background-image: url("img/background/background7-short.png");
     background-attachment: scroll;
     background-repeat: no-repeat;
-    background-position: 0 80px;
+    background-position: center top;
+    background-size: cover;
+    min-height: 100dvh;
 }
 
 input::-webkit-outer-spin-button,
