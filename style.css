@@ -27,7 +27,7 @@ body {
     font-size: 18px;
 
     background-image: url("img/background/background7-short.png");
-    background-attachment: fixed;
+    background-attachment: scroll;
     background-repeat: no-repeat;
     background-position: 0 80px;
 }
