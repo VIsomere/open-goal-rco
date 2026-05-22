@@ -21,6 +21,17 @@ function setInit() {
     return initCode;
 }
 
+const imageCache = new Map();
+
+function preloadImage(src) {
+    if (imageCache.has(src)) return;
+
+    const img = new Image();
+    img.src = src;
+
+    imageCache.set(src, img);
+}
+
 // Dropdown Menu
 let dropdownMenuItemTitles = document.querySelectorAll('.dropdown-menu-item-title');
 
@@ -29,7 +40,21 @@ dropdownMenuItemTitles.forEach(menuItemTitle => {
 
         const menuItemData = e.target.nextElementSibling;
 
-        menuItemData.style.setProperty('--openHeight', menuItemData.scrollHeight + 'px');
+        const height = menuItemData.scrollHeight;
+
+        // Startwert setzen
+        menuItemData.style.setProperty('--openHeight', '0px');
+
+        // Reflow erzwingen
+        void menuItemData.offsetHeight;
+
+        // Danach animieren
+        requestAnimationFrame(() => {
+            menuItemData.style.setProperty(
+                '--openHeight',
+                `${height}px`
+            );
+        });
     
         menuItemData.classList.toggle('show');
         menuItemData.classList.toggle('hide');
@@ -76,10 +101,18 @@ dropdownMenuItemTitles.forEach(menuItemTitle => {
 // images
 const menuElements = document.querySelectorAll('.dropdown-submenu-item');
 
-menuElements.forEach(menuElement => {
-    
-    menuElement.addEventListener('mouseover', showAreaInfo);
-    menuElement.addEventListener('mouseout', hideAreaInfo);
+document.addEventListener('mouseover', (e) => {
+    const menuElement = e.target.closest('.dropdown-submenu-item');
+
+    if (!menuElement) return;
+
+    showAreaInfo(menuElement);
+});
+
+document.addEventListener('mouseout', (e) => {
+    if (e.target.closest('.dropdown-submenu-item')) {
+        hideAreaInfo();
+    }
 });
 
 const areaInfoDisplay = document.getElementById('info-image');
@@ -87,19 +120,23 @@ const areaInfoDisplay = document.getElementById('info-image');
 areaInfoDisplay.addEventListener('mouseover', showAreaInfo);
 areaInfoDisplay.addEventListener('mouseout', hideAreaInfo);
 
-function showAreaInfo(e) {
+function showAreaInfo(menuElement) {
 
-    const menuElement = e.target;
-
+    var area = menuElement.parentElement.parentElement.parentElement.parentElement.parentElement.previousElementSibling.innerText;
+    area = area.replaceAll(" ", "_").replaceAll("'", "").toLowerCase();
+    console.log(area);
     var name = menuElement.firstChild.innerHTML;
-    var area = menuElement.parentElement.parentElement.parentElement.parentElement.parentElement.previousElementSibling.innerHTML.replaceAll(" ", "_").replaceAll("'", "").toLowerCase();
-    name = name.replaceAll(" ", "_").replaceAll('(', '').replaceAll(')', '').replaceAll("'", "").toLowerCase();
-    var path = area.concat("/").concat(name).concat(".png");
+    name = name.replaceAll(" ", "_").replaceAll('(', '').replaceAll(')', '').replaceAll("'", "").toLowerCase().concat(".webp");
+    let path = area + "/" + name;
 
     const x = menuElement.getBoundingClientRect().x + menuElement.getBoundingClientRect().width - areaInfoDisplay.getBoundingClientRect().width / 1.5;
     const y = menuElement.getBoundingClientRect().y + (menuElement.getBoundingClientRect().height / 2 - areaInfoDisplay.getBoundingClientRect().height / 2 + window.scrollY);
 
-    areaInfoDisplay.style.backgroundImage = "url(img/info/" + path + ")";
+    const imageSrc = `img/info/${path}`;
+    preloadImage(imageSrc);
+
+
+    areaInfoDisplay.style.backgroundImage = `url(${imageSrc})`;
     areaInfoDisplay.style.left = x + 'px';
     areaInfoDisplay.style.top = y + 'px';
     areaInfoDisplay.style.opacity = 1;
@@ -114,50 +151,96 @@ function hideAreaInfo() {
 
 
 //pyodide
-let pyodide;
+let pyodide = null;
+let pyodideLoading = null;
 
-function downloadFile(filename) {
-        let data = pyodide.FS.readFile(filename, { encoding: "utf8" });
-        let blob = new Blob([data], { type: "text/plain" });
-        let link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = filename;
-        link.click();
+async function loadPyodideRuntime() {
+    if (pyodide) return pyodide;
+
+    if (pyodideLoading) {
+        return pyodideLoading;
+    }
+
+    pyodideLoading = (async () => {
+        pyodide = await loadPyodide();
+
+        const pyFiles = [
+            "python/data.py",
+            "python/init.py",
+            "python/writing.py",
+            "python/main.py"
+        ];
+
+        await Promise.all(pyFiles.map(async (filename) => {
+            const response = await fetch(filename);
+            const code = await response.text();
+
+            pyodide.FS.writeFile(
+                filename.split("/").pop(),
+                code
+            );
+        }));
+
+        return pyodide;
+    })();
+
+    return pyodideLoading;
 }
 
-async function initPyodide() {
-    // Pyodide laden
-    pyodide = await loadPyodide();
+function downloadFile(filename) {
+    const data = pyodide.FS.readFile(filename, {
+        encoding: "utf8"
+    });
 
-    const pyFiles = ["python/data.py", "python/init.py", "python/writing.py", "python/main.py"];
+    const blob = new Blob([data], {
+        type: "text/plain"
+    });
 
-    //load files
-    async function addFile(filename) {
-        let response = await fetch(filename);
-        let code = await response.text();
-        pyodide.FS.writeFile(filename.split("/").pop(), code);
-    }
+    const link = document.createElement("a");
 
-    for (let file of pyFiles) {
-        await addFile(file);
-    }
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    URL.revokeObjectURL(link.href);
 }
 
 async function runMain() {
-    // refresh main and init
-    await pyodide.runPythonAsync(`
-        import sys
-        for mod in ["main", "init"]:
-            sys.modules.pop(mod, None)
+    const button = document.getElementById("btn");
+
+    try {
+        button.disabled = true;
+        button.textContent = "Loading Pyodide...";
+
+        await loadPyodideRuntime();
+
+        button.textContent = "Generating...";
+
+        await pyodide.runPythonAsync(`
+            import sys
+            for mod in ["main", "init"]:
+                sys.modules.pop(mod, None)
         `);
-    
-    // rewrite init file
-    pyodide.FS.writeFile("init.py", setInit());
 
-    //execute
-    await pyodide.runPythonAsync(`import main`);
+        pyodide.FS.writeFile(
+            "init.py",
+            setInit()
+        );
 
-    downloadFile(pyodide.FS.readdir(".")[pyodide.FS.readdir(".").length - 1]);
+        await pyodide.runPythonAsync(`import main`);
+
+        const files = pyodide.FS.readdir(".");
+        downloadFile(files[files.length - 1]);
+
+    } catch (err) {
+        console.error(err);
+        alert("Failed to generate splits.");
+
+    } finally {
+        button.disabled = false;
+        button.textContent = "Generate Splits";
+    }
 }
-
-initPyodide()
