@@ -124,7 +124,6 @@ function showAreaInfo(menuElement) {
 
     var area = menuElement.parentElement.parentElement.parentElement.parentElement.parentElement.previousElementSibling.innerText;
     area = area.replaceAll(" ", "_").replaceAll("'", "").toLowerCase();
-    console.log(area);
     var name = menuElement.firstChild.innerHTML;
     name = name.replaceAll(" ", "_").replaceAll('(', '').replaceAll(')', '').replaceAll("'", "").toLowerCase().concat(".webp");
     let path = area + "/" + name;
@@ -153,94 +152,92 @@ function hideAreaInfo() {
 //pyodide
 let pyodide = null;
 let pyodideLoading = null;
+let lastGeneratedFile = null;
+
+const delay = ms => new Promise(res => setTimeout(res, ms));
+const fileButtons = document.getElementsByClassName("fileButton");
 
 async function loadPyodideRuntime() {
     if (pyodide) return pyodide;
-
-    if (pyodideLoading) {
-        return pyodideLoading;
-    }
+    if (pyodideLoading) return pyodideLoading;
 
     pyodideLoading = (async () => {
         pyodide = await loadPyodide();
-
         const pyFiles = [
             "python/data.py",
             "python/init.py",
             "python/writing.py",
             "python/main.py"
         ];
-
         await Promise.all(pyFiles.map(async (filename) => {
             const response = await fetch(filename);
             const code = await response.text();
-
-            pyodide.FS.writeFile(
-                filename.split("/").pop(),
-                code
-            );
+            pyodide.FS.writeFile(filename.split("/").pop(), code);
         }));
-
         return pyodide;
     })();
-
     return pyodideLoading;
-}
-
-function downloadFile(filename) {
-    const data = pyodide.FS.readFile(filename, {
-        encoding: "utf8"
-    });
-
-    const blob = new Blob([data], {
-        type: "text/plain"
-    });
-
-    const link = document.createElement("a");
-
-    link.href = URL.createObjectURL(blob);
-    link.download = filename;
-
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-
-    URL.revokeObjectURL(link.href);
 }
 
 async function runMain() {
     const button = document.getElementById("btn");
-
     try {
-        button.disabled = true;
-        button.textContent = "Loading Pyodide...";
-
+        button.classList.add("disabled");
+        fileButtons[0].classList.add("disabled");
+        fileButtons[1].classList.add("disabled");
+        button.textContent = "Loading...";
         await loadPyodideRuntime();
-
+        
         button.textContent = "Generating...";
-
+        await delay(600);
         await pyodide.runPythonAsync(`
             import sys
             for mod in ["main", "init"]:
                 sys.modules.pop(mod, None)
         `);
-
-        pyodide.FS.writeFile(
-            "init.py",
-            setInit()
-        );
-
+        
+        pyodide.FS.writeFile("init.py", setInit());
         await pyodide.runPythonAsync(`import main`);
-
+        
         const files = pyodide.FS.readdir(".");
-        downloadFile(files[files.length - 1]);
-
+        lastGeneratedFile = files[files.length - 1]; 
+        
     } catch (err) {
         console.error(err);
-        alert("Failed to generate splits.");
-
+        alert("Error while generating Splits.");
     } finally {
-        button.disabled = false;
-        button.textContent = "Generate Splits";
+        button.classList.remove("disabled");
+        fileButtons[0].classList.remove("disabled");
+        fileButtons[1].classList.remove("disabled");
+        button.textContent = "Generate New Splits";
     }
+}
+
+function getFileData(filename) {
+    if (!pyodide || !filename) {
+        return null;
+    }
+    const data = pyodide.FS.readFile(filename); 
+    return new Blob([data], { type: "text/plain;charset=utf-8" });
+}
+
+function downloadFile() {
+    const blob = getFileData(lastGeneratedFile);
+    if (!blob) return;
+
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = lastGeneratedFile;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(link.href);
+}
+
+function openFileInNewTab() {
+    const blob = getFileData(lastGeneratedFile);
+    if (!blob) return;
+
+    const fileURL = URL.createObjectURL(blob);
+    window.open(fileURL, '_blank');
 }

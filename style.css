@@ -381,6 +381,11 @@ h3 {
     border: 2px solid var(--dark-gray);
 }
 
+.disabled {
+    pointer-events: none;
+    color: var(--light-gray);
+}
+
 /* Drobdown Menu */
 .dropdown-menu {
     width: 100%;

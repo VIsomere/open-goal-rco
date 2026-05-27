@@ -95,7 +95,7 @@
                         <li>All the collectibles are listed on the right. I would recommend taking a look at these before starting.</li>
                         <li>When playing make sure to only do your current task. Everything not required to do so might be an objective for later.</li>
                         <li>I would also recommend to save your game from time to time in case you accidentally collect something and have to reload.</li>
-                        <li>After a little bit of testing I would estimate a playtime of 8-10 hours. Altough I excluded some of the more difficult tricks (FCS & LTS).</li>
+                        <li>After a little bit of testing I would estimate a playtime of 8-10 hours excluding FCS & LTS.</li>
                     </ul>
                     <br>
                     <h3>Troubleshooting</h3>
@@ -213,6 +213,10 @@
                     </div>
                     
                     <button id="btn" class="button" onclick="runMain()">Generate Splits</button>
+                    <div style="display: flex; margin-top: -15px; gap: 15px;">
+                        <button class="button fileButton disabled" onclick="downloadFile()">Download .lss File</button>
+                        <button class="button fileButton disabled" onclick="openFileInNewTab()">Preview .lss file</button>
+                    </div>
                 </div>
             </div>
             
