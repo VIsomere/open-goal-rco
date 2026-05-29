@@ -3,6 +3,7 @@ from data import geyser_data_original, data_original
 #from init_debug import *
 from init import *
 import random
+import math
 
 #technical stuff
 geyser_data = geyser_data_original.copy()
@@ -12,6 +13,7 @@ double_split = 0
 splits = 0
 counter = 0
 written_splits = 0
+print(orb_bundle_size)
 
 #meta_data
 splits_list = []
@@ -19,12 +21,18 @@ if seed == 0:
     seed = random.randint(1, 9999999999999999)
 random.seed(seed)
 power_cells = 0
-available_orbs = 337
 if exclude_scout_flies:
     scout_flies = {"GR": 7, "SV": 7, "FJ": 7, "MI": 0, "SB": 7, "FC": 7, "RV": 7, "PB": 7, "LPC": 7, "BS": 7, "MP": 7, "VC": 7, "SC": 7, "SM": 0, "LT": 7, "C": 0}
 else:
     scout_flies = {"GR": 0, "SV": 0, "FJ": 0, "MI": 0, "SB": 0, "FC": 0, "RV": 0, "PB": 0, "LPC": 0, "BS": 0, "MP": 0, "VC": 0, "SC": 0, "SM": 0, "LT": 0, "C": 0}
+if exclude_orbs:
+    available_orbs = 337
+else:
+    available_orbs = 0
 orbs = {"GR": 50, "SV": 50, "FJ": 99, "MI": 0, "SB": 138, "FC": 0, "RV": 50, "PB": 0, "LPC": 200, "BS": 200, "MP": 0, "VC": 50, "SC": 185, "SM": 0, "LT": 0, "C": 0}
+remaining_orbs = {"GR": 50, "SV": 0, "FJ": 0, "MI": 0, "SB": 0, "FC": 0, "RV": 0, "PB": 0, "LPC": 0, "BS": 0, "MP": 0, "VC": 0, "SC": 0, "SM": 0, "LT": 0, "C": 0}
+amount_orb_bundles = 2000 // orb_bundle_size
+bundle_chance = math.ceil(amount_orb_bundles / (len(data) + amount_orb_bundles) * 100)
 
 #prepare file
 file = openFile(seed)
@@ -73,6 +81,7 @@ while power_cells < 4:
         geyser_data.pop(rnd)
 
 #rest of game
+hub_one_orbs = False
 if exclude_misc_items:
     exclude_warp_buttons = True
 #hub 1
@@ -202,36 +211,51 @@ else:
 while len(data) > 0:
     counter += 1
     write = True
+    orb = False
 
-    if power_cells < 20 and not allow_fcs: #prevent fcs
-        rnd = random.randint(0, 86 - splits)
-    elif not fc_cell: #end of fc softlock
-        rnd = random.randint(0, 99 - splits)
-    elif power_cells < 45 and not allow_boulder_skip: #prevent bs
-        rnd = random.randint(0, 177 - splits)
-    elif not bomb_lurker: #bomb lurker softlock
-        rnd = random.randint(0, 202 - splits)
-    elif power_cells < 72 and not allow_lts: #prevent lts
-        rnd = random.randint(0, 282 - splits)
-    else:
-        rnd = random.randint(0, len(data) - 1)
+    if not exclude_orbs:
+        if random.randint(0, 100) < bundle_chance:
+            item_type = "ORB"
+            valid_area = False
+            areas = ["GR", "SV", "FJ", "MI", "SB", "FC", "RV", "PB", "LPC", "BS", "MP", "VC", "SC", "SM", "LT", "C"]
+            while not valid_area:
+                item_area = random.choice(areas)
+                if remaining_orbs[item_area] >= orb_bundle_size:
+                    valid_area = True
+                    item = "[" + item_area + "|ORB] Collect " + str(orb_bundle_size) + " Orbs"
+                    available_orbs += orb_bundle_size
+                    remaining_orbs[item_area] -= orb_bundle_size
+                    orb = True
+                else:
+                    areas.remove(item_area)
+                    if len(areas) == 0:
+                        valid_area = True
+        
+    if not orb:
+        if power_cells < 20 and not allow_fcs: #prevent fcs
+            rnd = random.randint(0, 86 - splits)
+        elif not fc_cell: #end of fc softlock
+            rnd = random.randint(0, 99 - splits)
+        elif power_cells < 45 and not allow_boulder_skip: #prevent bs
+            rnd = random.randint(0, 177 - splits)
+        elif not bomb_lurker: #bomb lurker softlock
+            rnd = random.randint(0, 202 - splits)
+        elif power_cells < 72 and not allow_lts: #prevent lts
+            rnd = random.randint(0, 282 - splits)
+        else:
+            rnd = random.randint(0, len(data) - 1)
 
-    item = data[rnd]
-    item_type = item.split("|")[1].split("]")[0]
-    item_area = item.split("|")[0][1:]
+        item = data[rnd]
+        item_type = item.split("|")[1].split("]")[0]
+        item_area = item.split("|")[0][1:]
 
     if exclude_misc_items and item_type == "MISC":
         write = False
         splits += 1
         data.pop(rnd)
     if exclude_scout_flies and item_type == "SF":
-        if item_area == "MI" and not misty:
-            pass
-        elif item_area == "SM" and not snowy:
-            pass
-        else:
-            splits += 1
-            data.pop(rnd)
+        splits += 1
+        data.pop(rnd)
         write = False
 
     #general
@@ -724,106 +748,160 @@ while len(data) > 0:
             available_orbs -= 120
 
     #start (50 + 50 + 138 + 99 = 337)
+    if not hub_one_orbs:
+        remaining_orbs["SV"] += 50
+        remaining_orbs["FJ"] += 99
+        remaining_orbs["SB"] += 138
+        hub_one_orbs = True
     #sentinel beach
     if allow_tower_climb or blue_eco:
         if orbs["SB"] == 138:
             orbs["SB"] += 12
-            available_orbs += 12
+            remaining_orbs["SB"] += 12
+            if exclude_orbs:
+                available_orbs += 12
     #forbidden jungle
     if temple_elevator or (allow_temple_deload and (blue_eco or plant_boss)):
         if orbs["FJ"] == 99:
             orbs["FJ"] += 26
-            available_orbs += 26
+            remaining_orbs["FJ"] += 26
+            if exclude_orbs:
+                available_orbs += 26
     if blue_eco:
         if orbs["FJ"] in [125, 130]:
             orbs["FJ"] += 20
-            available_orbs += 20
+            remaining_orbs["FJ"] += 20
+            if exclude_orbs:
+                available_orbs += 20
     if plant_boss:
         if orbs["FJ"] in [125, 145]:
             orbs["FJ"] += 5
-            available_orbs += 5
+            remaining_orbs["FJ"] += 5
+            if exclude_orbs:
+                available_orbs += 5
     #misty island
     if misty:
         if orbs["MI"] == 0:
             orbs["MI"] += 136
-            available_orbs += 136
+            remaining_orbs["MI"] += 136
+            if exclude_orbs:
+                available_orbs += 136
     if misty_cannon:
         if orbs["MI"] == 136:
             orbs["MI"] += 14
-            available_orbs += 14
+            remaining_orbs["MI"] += 14
+            if exclude_orbs:
+                available_orbs += 14
     #fire canyon
-    if power_cells == 20:
+    if power_cells == 20 or item == "[FC|PC] Reach The End Of Fire Canyon":
         if orbs["FC"] == 0:
             orbs["FC"] += 50
-            available_orbs += 50
+            remaining_orbs["FC"] += 50
+            if exclude_orbs:
+                available_orbs += 50
     #hub 2 (50 + 200 + 200 = 450)
     if item == "[FC|PC] Reach The End Of Fire Canyon":
         if write:
-            available_orbs += 450
+            if exclude_orbs:
+                available_orbs += 450
+            else:
+                remaining_orbs["RV"] += 50
+                remaining_orbs["BS"] += 200
+                remaining_orbs["LPC"] += 200
             #precursor basin
             if allow_on_foot_basin:
                 orbs["PB"] += 82
-                available_orbs += 82
+                remaining_orbs["PB"] += 82
+                if exclude_orbs:
+                    available_orbs += 82
     #precursor basin
     if blue_button or exclude_warp_buttons:
         if orbs["PB"] == 82:
             orbs["PB"] += 118
-            available_orbs += 118
+            remaining_orbs["PB"] += 118
+            if exclude_orbs:
+                available_orbs += 118
         elif orbs["PB"] == 0:
             orbs["PB"] += 200
-            available_orbs += 200
+            remaining_orbs["PB"] += 200
+            if exclude_orbs:
+                available_orbs += 200
     #mountain pass orbs
     if item_area in ["MP", "VC", "SM", "SC", "LT", "C"]:
         if write:
             if orbs["MP"] == 0:
                 orbs["MP"] += 50
-                available_orbs += 50
+                remaining_orbs["MP"] += 50
+                if exclude_orbs:
+                    available_orbs += 50
     #hub 3 (50 + 185)
     if item == "[MP|MISC] Stop The Bomb Lurker":
         if write:
-            available_orbs += 235
+            if exclude_orbs:
+                available_orbs += 235
+            else:
+                remaining_orbs["VC"] += 50
+                remaining_orbs["SC"] += 185
     #spider cave
     if item == "[SC|PC] Shoot The Gnawing Lurkers":
         if write:
             orbs["SC"] += 15
-            available_orbs += 15
+            remaining_orbs["SC"] += 15
+            if exclude_orbs:
+                available_orbs += 15
     #snowy mountain
     if snowy:
         if orbs["SM"] == 0:
             orbs["SM"] += 105
-            available_orbs += 105
+            remaining_orbs["SM"] += 105
+            if exclude_orbs:
+                available_orbs += 105
     if allow_fort_gate_skip or snowy_gate_open:
         if orbs["SM"] in [105, 113, 120, 128]:
             orbs["SM"] += 72
-            available_orbs += 72
+            remaining_orbs["SM"] += 72
+            if exclude_orbs:
+                available_orbs += 72
     if snowy_flut:
         if orbs["SM"] in [105, 177]:
             orbs["SM"] += 23
-            available_orbs += 23
+            remaining_orbs["SM"] += 23
+            if exclude_orbs:
+                available_orbs += 23
     if snowy_flut:
         if orbs["SM"] in [113, 185]:
             orbs["SM"] += 15
-            available_orbs += 15
+            remaining_orbs["SM"] += 15
+            if exclude_orbs:
+                available_orbs += 15
     if yellow_eco:
         if orbs["SM"] in [105, 177]:
             orbs["SM"] += 8
-            available_orbs += 8
+            remaining_orbs["SM"] += 8
+            if exclude_orbs:
+                available_orbs += 8
     #lava tube
     if item_area in ["LT", "C"]:
         if write:
             if orbs["LT"] == 0:
                 orbs["LT"] += 50
-                available_orbs += 50
+                remaining_orbs["LT"] += 50
+                if exclude_orbs:
+                    available_orbs += 50
     #citadel
     if item_area == "C":
         if write:
             if orbs["C"] == 0:
                 orbs["C"] += 180
-                available_orbs += 180
+                remaining_orbs["C"] += 180
+                if exclude_orbs:
+                    available_orbs += 180
             if allow_citadel_skip or citadel_stairs:
                 if orbs["C"] == 180:
                     orbs["C"] += 20
-                    available_orbs += 20
+                    remaining_orbs["C"] += 20
+                    if exclude_orbs:
+                        available_orbs += 20
 
     #write split
     if force_miners_cell:
@@ -834,6 +912,7 @@ while len(data) > 0:
         splits += 1
         power_cells += 1
         snowy_cells += 1
+
     if write:
         if item == "[VC|PC] Bring 90 Orbs To The Miners":
             miners_count += 1
@@ -863,8 +942,10 @@ while len(data) > 0:
                 power_cells += 1
                 if red_button:
                     snowy_cells += 1
-        splits += 1
-        data.pop(rnd)
+        if not item_type == "ORB":
+            splits += 1
+            data.pop(rnd)
+
 
     if splits == old_split:
         double_split += 1
@@ -874,6 +955,24 @@ while len(data) > 0:
     if double_split > 250:
         print("ERROR!")
         break
+
+force_orbs = True
+areas = ["GR", "SV", "FJ", "MI", "SB", "FC", "RV", "PB", "LPC", "BS", "MP", "VC", "SC", "SM", "LT", "C"]
+item_type = "ORB"
+while force_orbs:
+    item_area = random.choice(areas)
+    if remaining_orbs[item_area] >= orb_bundle_size:
+        item = "[" + item_area + "|ORB] Collect " + str(orb_bundle_size) + " Orbs"
+        remaining_orbs[item_area] -= orb_bundle_size
+
+        splits_list.append(item)
+        written_splits += 1
+    else:
+        areas.remove(item_area)
+        if len(areas) == 0:
+            force_orbs = False
+
+
 
 split_count = 0
 for split in splits_list:

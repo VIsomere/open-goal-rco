@@ -64,7 +64,7 @@
                     but it also forces you to grab other collectibles (e.g., Scout Flies) and complete a series of miscellaneous tasks
                     (e.g., connecting mirrors, pressing buttons, beating bosses) in a specific order. As you not only have to complete more objectives but also a larger variety of them
                     this randomizer will have you revisiting and backtracking a lot and it will most likely come with a great deal of pain.<br><br>
-                    Maybe in the future there will be more updates...
+                    Now let's take a look at the guide section...
             </div>
             <div class="text-container help">
                 <h2>Guide</h2>
@@ -114,102 +114,120 @@
                 
                 <div class="rules">
                     <div id="check-boxes">
-                    <h2>Rules</h2>
-                    <a>Progress Display</a>
-                    <div>
-                        <label class="check-box-container"><input type="checkbox" class="inits" name="write_split_progress"><span class="checkmark"></span>Write Split Progress</label>
-                        <label class="checkbox-info" name="write_split_progress"><img src="img/question_mark.webp" alt="question_mark""><span class="info-box">Show your progress by displaying the amount of completed tasks</span></label>
-                    </div>
-                    <div>
-                        <label class="check-box-container"><input type="checkbox" class="inits" name="write_percent_progress"><span class="checkmark"></span>Write Percent Progress</label>
-                        <label class="checkbox-info" name="write_percent_progress"><img src="img/question_mark.webp" alt="question_mark""><span class="info-box">Show your progress by displaying the percentage of completed tasks</span></label>
-                    </div>
-                    <a>Inclusion</a>
-                    <div>
-                        <label class="check-box-container"><input type="checkbox" class="inits" name="exclude_scout_flies"><span class="checkmark"></span>Exclude Scout Flies</label>
-                        <label class="checkbox-info" name="exclude_scout_flies"><img src="img/question_mark.webp" alt="question_mark""><span class="info-box">Scout Flies are not randomized and can be collected at any time</span></label>
-                    </div>
-                    <div>
-                        <label class="check-box-container"><input type="checkbox" class="inits" name="exclude_misc_items"><span class="checkmark"></span>Exclude Miscellaneous</label>
-                        <label class="checkbox-info" name="exclude_misc_items"><img src="img/question_mark.webp" alt="question_mark""><span class="info-box">Miscellaneous Tasks are not randomized and can be completed at any time</span></label>
-                    </div>
-                    <div>
-                        <label class="check-box-container"><input type="checkbox" class="inits" name="exclude_warp_buttons"><span class="checkmark"></span>Exclude Warp Buttons</label>
-                        <label class="checkbox-info" name="exclude_warp_buttons"><img src="img/question_mark.webp" alt="question_mark""><span class="info-box">Warp Gate Buttons are not randomized and can (should) be pressed at any time</span></label>
-                    </div>
-                    <a id="seperator-line">Skips</a>
-                    <div>
-                        <label class="check-box-container"><input type="checkbox" class="inits" name="allow_fcs" checked><span class="checkmark"></span>Allow FCS</label>
-                        <label class="checkbox-info" name="allow_fcs"><img src="img/question_mark.webp" alt="question_mark""><span class="info-box">Performing FCS may be required</span></label>
-                    </div>
-                    <div>
-                        <label class="check-box-container"><input type="checkbox" class="inits" name="allow_boulder_skip" checked><span class="checkmark"></span>Allow Boulder Skip</label>
-                        <label class="checkbox-info" name="allow_boulder_skip"><img src="img/question_mark.webp" alt="question_mark""><span class="info-box">Performing Boulder Skip may be required</span></label>
-                    </div>
-                    <div>
-                        <label class="check-box-container"><input type="checkbox" class="inits" name="allow_lts" checked><span class="checkmark"></span>Allow LTS</label>
-                        <label class="checkbox-info" name="allow_lts"><img src="img/question_mark.webp" alt="question_mark""><span class="info-box">Performing LTS may be required</span></label>
-                    </div>
-                    <div>
-                        <label class="check-box-container"><input type="checkbox" class="inits" name="allow_precursor_door_skip" checked><span class="checkmark"></span>Allow Precursor Door Skip</label>
-                        <label class="checkbox-info" name="allow_precursor_door_skip"><img src="img/question_mark.webp" alt="question_mark""><span class="info-box">Skipping the Precursor Door in Geyser Rock may be required</span></label>
-                    </div>
-                    <div>
-                        <label class="check-box-container"><input type="checkbox" class="inits" name="allow_temple_deload" checked><span class="checkmark"></span>Allow Temple Deload</label>
-                        <label class="checkbox-info" name="allow_temple_deload"><img src="img/question_mark.webp" alt="question_mark""><span class="info-box">Deloading Temple to get inside may be required</span></label>
-                    </div>
-                    <div>
-                        <label class="check-box-container"><input type="checkbox" class="inits" name="allow_temple_skip" checked><span class="checkmark"></span>Allow Temple Skip</label>
-                        <label class="checkbox-info" name="allow_temple_skip"><img src="img/question_mark.webp" alt="question_mark""><span class="info-box">Beating Plant Boss before activating the Blue Vent Switch may be required</span></label>
-                    </div>
-                    <div>
-                        <label class="check-box-container"><input type="checkbox" class="inits" name="allow_leaving_temple_early" checked><span class="checkmark"></span>Allow Leaving Temple Early</label>
-                    <label class="checkbox-info" name="allow_leaving_temple_early"><img src="img/question_mark.webp" alt="question_mark""><span class="info-box">Leaving Forbidden Temple before beating Plant Boss may be required</span></label>
-                    </div>
-                    <div>
-                        <label class="check-box-container"><input type="checkbox" class="inits" name="allow_locked_temple_skip" checked><span class="checkmark"></span>Allow Locked Temple Door Skip</label>
-                        <label class="checkbox-info" name="allow_locked_temple_skip"><img src="img/question_mark.webp" alt="question_mark""><span class="info-box">Collecting the Power Cell before opening the locked temple door may be required</span></label>
-                    </div>
-                    <div>
-                        <label class="check-box-container"><input type="checkbox" class="inits" name="allow_tower_climb" checked><span class="checkmark"></span>Allow Tower Climb</label>
-                        <label class="checkbox-info" name="allow_tower_climb"><img src="img/question_mark.webp" alt="question_mark""><span class="info-box">Climbing the cannon tower in Sentinel Beach without blue eco may be required</span></label>
-                    </div>
-                    <div>
-                        <label class="check-box-container"><input type="checkbox" class="inits" name="allow_on_foot_basin" checked><span class="checkmark"></span>Allow On Foot Basin</label>
-                        <label class="checkbox-info" name="allow_on_foot_basin"><img src="img/question_mark.webp" alt="question_mark""><span class="info-box">Entering Precursor Basin without the zoomer may be required</span></label>
-                    </div>
-                    <div>
-                        <label class="check-box-container"><input type="checkbox" class="inits" name="allow_on_foot_race" checked><span class="checkmark"></span>Allow On Foot Race</label>
-                        <label class="checkbox-info" name="allow_on_foot_race"><img src="img/question_mark.webp" alt="question_mark""><span class="info-box">Beating the record time on foot may be required</span></label>
-                    </div>
-                    <div>
-                        <label class="check-box-container"><input type="checkbox" class="inits" name="allow_button_clip" checked><span class="checkmark"></span>Allow Button Clip</label>
-                        <label class="checkbox-info" name="allow_button_clip"><img src="img/question_mark.webp" alt="question_mark""><span class="info-box">Collecting the Power Cell before raising the sunken chamber may be required</span></label>
-                    </div>
-                    <div>
-                        <label class="check-box-container"><input type="checkbox" class="inits" name="allow_tree_stalagmite_hops" checked><span class="checkmark"></span>Allow Tree/Stalagmite Hops</label>
-                        <label class="checkbox-info" name="allow_tree_stalagmite_hops"><img src="img/question_mark.webp" alt="question_mark""><span class="info-box">Performing Tree/Stalagmite Hops may be required</span></label>
-                    </div>
-                    <div>
-                        <label class="check-box-container"><input type="checkbox" class="inits" name="allow_backwards_mp" checked><span class="checkmark"></span>Allow Backwards MP</label>
-                        <label class="checkbox-info" name="allow_backwards_mp"><img src="img/question_mark.webp" alt="question_mark""><span class="info-box">Going backwards without the zoomer in Mountain Pass may be required</span></label>
-                    </div>
-                    <div>
-                        <label class="check-box-container"><input type="checkbox" class="inits" name="allow_fort_gate_skip" checked><span class="checkmark"></span>Allow Fort Gate Skip</label>
-                        <label class="checkbox-info" name="allow_fort_gate_skip"><img src="img/question_mark.webp" alt="question_mark""><span class="info-box">Entering Snowy Fort without opening the gate may be required</span></label>
-                    </div>
-                    <div>
-                        <label class="check-box-container"><input type="checkbox" class="inits" name="allow_oranges_skip" checked><span class="checkmark"></span>Allow Oranges Skip</label>
-                        <label class="checkbox-info" name="allow_oranges_skip"><img src="img/question_mark.webp" alt="question_mark""><span class="info-box">Driving through Lava Tube without destroying Oranges may be required</span></label>
-                    </div>
-                    <div>
-                        <label class="check-box-container"><input type="checkbox" class="inits" name="allow_early_citadel" checked><span class="checkmark"></span>Allow Early Citadel</label>
-                        <label class="checkbox-info" name="allow_early_citadel"><img src="img/question_mark.webp" alt="question_mark""><span class="info-box">Citadel Hops or deloading Citadel to enter may be required</span></label>
-                    </div>
-                    <div>
-                        <label class="check-box-container"><input type="checkbox" class="inits" name="allow_citadel_skip" checked><span class="checkmark"></span>Allow Citadel Skip</label>
-                        <label class="checkbox-info" name="allow_citadel_skip"><img src="img/question_mark.webp" alt="question_mark""><span class="info-box">Performing Citadel Skip or v2 may be required</span></label>
-                    </div>
+                        <h2>Rules</h2>
+                        <a>Progress Display</a>
+                        <div>
+                            <label class="check-box-container"><input type="checkbox" class="inits" name="write_split_progress"><span class="checkmark"></span>Write Split Progress</label>
+                            <label class="checkbox-info" name="write_split_progress"><img src="img/question_mark.webp" alt="question_mark"><span class="info-box">Show your progress by displaying the amount of completed tasks</span></label>
+                        </div>
+                        <div>
+                            <label class="check-box-container"><input type="checkbox" class="inits" name="write_percent_progress"><span class="checkmark"></span>Write Percent Progress</label>
+                            <label class="checkbox-info" name="write_percent_progress"><img src="img/question_mark.webp" alt="question_mark"><span class="info-box">Show your progress by displaying the percentage of completed tasks</span></label>
+                        </div>
+                        <a>Inclusion</a>
+                        <div>
+                            <label class="check-box-container"><input type="checkbox" class="inits" name="exclude_scout_flies"><span class="checkmark"></span>Exclude Scout Flies</label>
+                            <label class="checkbox-info" name="exclude_scout_flies"><img src="img/question_mark.webp" alt="question_mark"><span class="info-box">Scout Flies are not randomized and can be collected at any time</span></label>
+                        </div>
+                        <div>
+                            <label class="check-box-container"><input type="checkbox" class="inits" name="exclude_misc_items"><span class="checkmark"></span>Exclude Miscellaneous</label>
+                            <label class="checkbox-info" name="exclude_misc_items"><img src="img/question_mark.webp" alt="question_mark"><span class="info-box">Miscellaneous Tasks are not randomized and can be completed at any time</span></label>
+                        </div>
+                        <div>
+                            <label class="check-box-container"><input type="checkbox" class="inits" name="exclude_warp_buttons"><span class="checkmark"></span>Exclude Warp Buttons</label>
+                            <label class="checkbox-info" name="exclude_warp_buttons"><img src="img/question_mark.webp" alt="question_mark"><span class="info-box">Warp Gate Buttons are not randomized and can (should) be pressed at any time</span></label>
+                        </div>
+                        <div>
+                            <label class="check-box-container"><input type="checkbox" class="inits" name="exclude_orbs" onclick="clickedOrbs();"><span class="checkmark"></span>Exclude Orbs</label>
+                            <label class="checkbox-info" name="exclude_orbs"><img src="img/question_mark.webp" alt="question_mark"><span class="info-box">Precursor Orbs are not randomized and can be collected at any time</span></label>
+                        </div>
+                        <div>
+                            <div id="slider-container" style="padding: 0; border: none;">
+                                <div id="slider-bar" style="padding: 0; border: none;"></div>
+                                <div class="slider-circles" style="padding: 0; border: none;">
+                                    <div class="slider-circle" style="padding: 0; border: none"><p>1</p></div>
+                                    <div class="slider-circle" style="padding: 0; border: none"><p>5</p></div>
+                                    <div class="slider-circle" style="padding: 0; border: none"><p>10</p></div>
+                                    <div class="slider-circle circle-inactive" style="padding: 0; border: none"><p>25</p></div>
+                                    <div class="slider-circle circle-inactive" style="padding: 0; border: none"><p>50</p></div>
+                                </div>
+                                <input type="range" id="slider" min="0" oninput="changeSlider(this);">
+                            </div>
+                            <label class="checkbox-info" name="exclude_orbs"><img src="img/question_mark.webp" alt="question_mark"><span class="info-box">Determines the size of the orb bundles</span></label>
+                        </div>
+                        <a id="seperator-line">Skips</a>
+                        <div>
+                            <label class="check-box-container"><input type="checkbox" class="inits" name="allow_fcs" checked><span class="checkmark"></span>Allow FCS</label>
+                            <label class="checkbox-info" name="allow_fcs"><img src="img/question_mark.webp" alt="question_mark"><span class="info-box">Performing FCS may be required</span></label>
+                        </div>
+                        <div>
+                            <label class="check-box-container"><input type="checkbox" class="inits" name="allow_boulder_skip" checked><span class="checkmark"></span>Allow Boulder Skip</label>
+                            <label class="checkbox-info" name="allow_boulder_skip"><img src="img/question_mark.webp" alt="question_mark"><span class="info-box">Performing Boulder Skip may be required</span></label>
+                        </div>
+                        <div>
+                            <label class="check-box-container"><input type="checkbox" class="inits" name="allow_lts" checked><span class="checkmark"></span>Allow LTS</label>
+                            <label class="checkbox-info" name="allow_lts"><img src="img/question_mark.webp" alt="question_mark"><span class="info-box">Performing LTS may be required</span></label>
+                        </div>
+                        <div>
+                            <label class="check-box-container"><input type="checkbox" class="inits" name="allow_precursor_door_skip" checked><span class="checkmark"></span>Allow Precursor Door Skip</label>
+                            <label class="checkbox-info" name="allow_precursor_door_skip"><img src="img/question_mark.webp" alt="question_mark"><span class="info-box">Skipping the Precursor Door in Geyser Rock may be required</span></label>
+                        </div>
+                        <div>
+                            <label class="check-box-container"><input type="checkbox" class="inits" name="allow_temple_deload" checked><span class="checkmark"></span>Allow Temple Deload</label>
+                            <label class="checkbox-info" name="allow_temple_deload"><img src="img/question_mark.webp" alt="question_mark"><span class="info-box">Deloading Temple to get inside may be required</span></label>
+                        </div>
+                        <div>
+                            <label class="check-box-container"><input type="checkbox" class="inits" name="allow_temple_skip" checked><span class="checkmark"></span>Allow Temple Skip</label>
+                            <label class="checkbox-info" name="allow_temple_skip"><img src="img/question_mark.webp" alt="question_mark"><span class="info-box">Beating Plant Boss before activating the Blue Vent Switch may be required</span></label>
+                        </div>
+                        <div>
+                            <label class="check-box-container"><input type="checkbox" class="inits" name="allow_leaving_temple_early" checked><span class="checkmark"></span>Allow Leaving Temple Early</label>
+                        <label class="checkbox-info" name="allow_leaving_temple_early"><img src="img/question_mark.webp" alt="question_mark"><span class="info-box">Leaving Forbidden Temple before beating Plant Boss may be required</span></label>
+                        </div>
+                        <div>
+                            <label class="check-box-container"><input type="checkbox" class="inits" name="allow_locked_temple_skip" checked><span class="checkmark"></span>Allow Locked Temple Door Skip</label>
+                            <label class="checkbox-info" name="allow_locked_temple_skip"><img src="img/question_mark.webp" alt="question_mark"><span class="info-box">Collecting the Power Cell before opening the locked temple door may be required</span></label>
+                        </div>
+                        <div>
+                            <label class="check-box-container"><input type="checkbox" class="inits" name="allow_tower_climb" checked><span class="checkmark"></span>Allow Tower Climb</label>
+                            <label class="checkbox-info" name="allow_tower_climb"><img src="img/question_mark.webp" alt="question_mark"><span class="info-box">Climbing the cannon tower in Sentinel Beach without blue eco may be required</span></label>
+                        </div>
+                        <div>
+                            <label class="check-box-container"><input type="checkbox" class="inits" name="allow_on_foot_basin" checked><span class="checkmark"></span>Allow On Foot Basin</label>
+                            <label class="checkbox-info" name="allow_on_foot_basin"><img src="img/question_mark.webp" alt="question_mark"><span class="info-box">Entering Precursor Basin without the zoomer may be required</span></label>
+                        </div>
+                        <div>
+                            <label class="check-box-container"><input type="checkbox" class="inits" name="allow_on_foot_race" checked><span class="checkmark"></span>Allow On Foot Race</label>
+                            <label class="checkbox-info" name="allow_on_foot_race"><img src="img/question_mark.webp" alt="question_mark"><span class="info-box">Beating the record time on foot may be required</span></label>
+                        </div>
+                        <div>
+                            <label class="check-box-container"><input type="checkbox" class="inits" name="allow_button_clip" checked><span class="checkmark"></span>Allow Button Clip</label>
+                            <label class="checkbox-info" name="allow_button_clip"><img src="img/question_mark.webp" alt="question_mark"><span class="info-box">Collecting the Power Cell before raising the sunken chamber may be required</span></label>
+                        </div>
+                        <div>
+                            <label class="check-box-container"><input type="checkbox" class="inits" name="allow_tree_stalagmite_hops" checked><span class="checkmark"></span>Allow Tree/Stalagmite Hops</label>
+                            <label class="checkbox-info" name="allow_tree_stalagmite_hops"><img src="img/question_mark.webp" alt="question_mark"><span class="info-box">Performing Tree/Stalagmite Hops may be required</span></label>
+                        </div>
+                        <div>
+                            <label class="check-box-container"><input type="checkbox" class="inits" name="allow_backwards_mp" checked><span class="checkmark"></span>Allow Backwards MP</label>
+                            <label class="checkbox-info" name="allow_backwards_mp"><img src="img/question_mark.webp" alt="question_mark"><span class="info-box">Going backwards without the zoomer in Mountain Pass may be required</span></label>
+                        </div>
+                        <div>
+                            <label class="check-box-container"><input type="checkbox" class="inits" name="allow_fort_gate_skip" checked><span class="checkmark"></span>Allow Fort Gate Skip</label>
+                            <label class="checkbox-info" name="allow_fort_gate_skip"><img src="img/question_mark.webp" alt="question_mark"><span class="info-box">Entering Snowy Fort without opening the gate may be required</span></label>
+                        </div>
+                        <div>
+                            <label class="check-box-container"><input type="checkbox" class="inits" name="allow_oranges_skip" checked><span class="checkmark"></span>Allow Oranges Skip</label>
+                            <label class="checkbox-info" name="allow_oranges_skip"><img src="img/question_mark.webp" alt="question_mark"><span class="info-box">Driving through Lava Tube without destroying Oranges may be required</span></label>
+                        </div>
+                        <div>
+                            <label class="check-box-container"><input type="checkbox" class="inits" name="allow_early_citadel" checked><span class="checkmark"></span>Allow Early Citadel</label>
+                            <label class="checkbox-info" name="allow_early_citadel"><img src="img/question_mark.webp" alt="question_mark"><span class="info-box">Citadel Hops or deloading Citadel to enter may be required</span></label>
+                        </div>
+                        <div>
+                            <label class="check-box-container"><input type="checkbox" class="inits" name="allow_citadel_skip" checked><span class="checkmark"></span>Allow Citadel Skip</label>
+                            <label class="checkbox-info" name="allow_citadel_skip"><img src="img/question_mark.webp" alt="question_mark"><span class="info-box">Performing Citadel Skip or v2 may be required</span></label>
+                        </div>
                     </div>
                     
                     <button id="btn" class="button" onclick="runMain()">Generate Splits</button>

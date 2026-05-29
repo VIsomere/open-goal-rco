@@ -16,6 +16,8 @@
     --white: #f1f1f1;
     --dark-red: #b9360e;
     --light-red: #d43909;
+
+    --slider-color: #b9360e;
 }
 /* General */
 * {
@@ -249,6 +251,7 @@ h3 {
 #check-boxes h2 {
     margin: 15px 0 0 15px;
 }
+
 /* Rows */
 #check-boxes div {
     display: flex;
@@ -264,6 +267,93 @@ h3 {
 #seperator-line {
     border-top: 2px solid var(--black);
 }
+
+/* Slider */
+#slider-container {
+    width: 100%;
+    height: 65px;
+    transform: translateY(-10px);
+    position: relative;
+    margin: 0;
+}
+
+.slider-circles {
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    width: 95%;
+    top: 50%;
+    transform: translate(0, -50%);
+    align-items: space-between;
+}
+
+.slider-circle {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    top: 25%;
+    background: var(--slider-color);
+}
+.slider-circle p {
+    width: 100%;
+    padding-top: 8px;
+    text-align: center;
+}
+
+#slider {
+    -webkit-appearance: none;
+    position: absolute;
+    margin: 0;
+    width: 95%;
+    height: 10px;
+    top: 50%;
+    transform: translate(0, -50%);
+    border-radius: 5px;
+    background: var(--dark-gray);
+    outline: none;
+}
+
+#slider-bar {
+    position: absolute;
+    margin: 0;
+    width: 57%;
+    height: 10px;
+    top: 50%;
+    transform: translate(0, -50%);
+    border-radius: 5px;
+    background: var(--slider-color);
+    pointer-events: none;
+    z-index: 10;
+}
+
+#slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--slider-color);
+    cursor: pointer;
+}
+
+#slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--slider-color);
+    cursor: pointer;
+}
+
+.disable-slider {
+    --slider-color: #1b181b;
+    color: var(--dark-gray);
+    pointer-events: none;
+}
+
+.circle-inactive {
+    background: var(--dark-gray);
+}
+
 /* Actual checkbox and text */
 .check-box-container {
     padding-top: 4px;

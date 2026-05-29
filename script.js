@@ -1,3 +1,8 @@
+window.addEventListener('pagehide', () => {
+    pyodide = null;
+    pyodideLoading = null;
+});
+
 const init_checks = document.getElementsByClassName("inits");
 
 function generateSeed() {
@@ -15,12 +20,41 @@ function setInit() {
         generateSeed()
     }
     initCode = initCode.concat("seed = ").concat(String(seed.value));
+    initCode = initCode.concat("\norb_bundle_size = ").concat(String(orb_bundle_size));
     for (let i = 0; i < init_checks.length; i++) {
        initCode = initCode.concat("\n").concat(init_checks[i].name.concat(" = ").concat(capitalize(init_checks[i].checked)));
     }
     return initCode;
 }
 
+// Slider
+const slider = document.getElementById('slider');
+const sliderBar = document.getElementById('slider-bar');
+const sliderContainer = document.getElementById('slider-container');
+const sliderCircles = document.getElementsByClassName('slider-circle');
+function clickedOrbs() {
+    sliderContainer.classList.toggle('disable-slider');
+}
+
+const orbsSteps = [1, 5, 10, 25, 50]
+slider.setAttribute('max', orbsSteps.length - 1);
+slider.value = Math.floor(orbsSteps.length / 2);
+sliderBar.style.width = String(slider.value) * (95 / (orbsSteps.length - 1)) + "%";
+var orb_bundle_size = orbsSteps[parseInt(slider.value)];
+function changeSlider(e) {
+    orb_bundle_size = orbsSteps[parseInt(e.value)];
+
+    sliderBar.style.width = String(e.value * (95 / (orbsSteps.length - 1))) + "%";
+    for (let i = 0; i < sliderCircles.length; i++) {
+        if (i < e.value) {
+           sliderCircles[i].classList.remove('circle-inactive');
+        } else {
+            sliderCircles[i].classList.add('circle-inactive');
+        }
+    }
+}
+
+// Images Loading
 const imageCache = new Map();
 
 function preloadImage(src) {
@@ -42,13 +76,13 @@ dropdownMenuItemTitles.forEach(menuItemTitle => {
 
         const height = menuItemData.scrollHeight;
 
-        // Startwert setzen
+        // Set Srat Value
         menuItemData.style.setProperty('--openHeight', '0px');
 
-        // Reflow erzwingen
+        // Force Reflow
         void menuItemData.offsetHeight;
 
-        // Danach animieren
+        // Animate
         requestAnimationFrame(() => {
             menuItemData.style.setProperty(
                 '--openHeight',
@@ -66,7 +100,7 @@ dropdownMenuItemTitles.forEach(menuItemTitle => {
             
             var scrollHeight = 0;
             
-            for (i = 0; i < dropdownMenuItemTitles.length; i++) {
+            for (let i = 0; i < dropdownMenuItemTitles.length; i++) {
                 
                 var curItem = dropdownMenuItemTitles[i].nextElementSibling;
                 if (curItem.classList.contains('show') && curItem.previousElementSibling.classList.contains("sub") && curItem != menuItemData) {
@@ -85,7 +119,7 @@ dropdownMenuItemTitles.forEach(menuItemTitle => {
             parent.style.setProperty('--openHeight', parentScrollHeight + scrollHeight + 'px');
         }
         if (parent.nodeName == 'DIV') {
-            for (i = 0; i < dropdownMenuItemTitles.length; i++) {
+            for (let i = 0; i < dropdownMenuItemTitles.length; i++) {
                 
                 var curItem = dropdownMenuItemTitles[i].nextElementSibling;
                 if (curItem.classList.contains('show') && curItem != menuItemData) {
@@ -98,7 +132,7 @@ dropdownMenuItemTitles.forEach(menuItemTitle => {
     })
 });
 
-// images
+// Show Images
 const menuElements = document.querySelectorAll('.dropdown-submenu-item');
 
 document.addEventListener('mouseover', (e) => {
@@ -149,7 +183,7 @@ function hideAreaInfo() {
 }
 
 
-//pyodide
+// Pyodide
 let pyodide = null;
 let pyodideLoading = null;
 let lastGeneratedFile = null;
@@ -239,5 +273,9 @@ function openFileInNewTab() {
     if (!blob) return;
 
     const fileURL = URL.createObjectURL(blob);
-    window.open(fileURL, '_blank');
+    const newTab = window.open(fileURL, '_blank', 'noopener,noreferrer');
+
+    setTimeout(() => {
+        URL.revokeObjectURL(fileURL);
+    }, 1000);
 }

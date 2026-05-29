@@ -1,4 +1,5 @@
-seed = 0 #0 for random seed
+seed = 0                                # 0 -> random seed
+orb_bundle_size = 0
 
 #Splits
 write_split_progress = 0
@@ -9,6 +10,7 @@ exclude_misc_items = 0                  # 0 -> Miscellaneous Items Will Not Be R
 exclude_scout_flies = 0                 # 0 -> Scout Flies Will Not Be Randomized And Can Be Collected At Any Time
 exclude_power_cells = 0
 exclude_warp_buttons = 0                # 0 -> The Warp Buttons Will Not Be Randomized And Can Be Pressed At Any Time
+exclude_orbs = 0                        # 0 -> Precursor Orbs Will Not Be Randomized And Can Be Collected At Any Time
 
 #Main Skips
 allow_fcs = 0                           # 0 -> FCS Will Never Be Necessary
