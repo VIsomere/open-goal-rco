@@ -956,7 +956,10 @@ while len(data) > 0:
         print("ERROR!")
         break
 
-force_orbs = True
+if not exclude_orbs:
+    force_orbs = True
+else:
+    force_orbs = False
 areas = ["GR", "SV", "FJ", "MI", "SB", "FC", "RV", "PB", "LPC", "BS", "MP", "VC", "SC", "SM", "LT", "C"]
 item_type = "ORB"
 while force_orbs:
