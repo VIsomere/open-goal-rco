@@ -9,11 +9,6 @@
     <link rel="preload" href="style.css?v=3" as="style" onload="this.onload=null;this.rel='stylesheet'">
 </head>
 <body">
-
-    <!-- 
-        TODO
-        - add orbs
-     -->
     
     <!-- info-image -->
     <div id="info-image"></div>
@@ -64,7 +59,7 @@
                     but it also forces you to grab other collectibles (e.g., Scout Flies) and complete a series of miscellaneous tasks
                     (e.g., connecting mirrors, pressing buttons, beating bosses) in a specific order. As you not only have to complete more objectives but also a larger variety of them
                     this randomizer will have you revisiting and backtracking a lot and it will most likely come with a great deal of pain.<br><br>
-                    Now let's take a look at the guide section...
+                    Orbs bundles will be added soon...
             </div>
             <div class="text-container help">
                 <h2>Guide</h2>
@@ -137,12 +132,12 @@
                             <label class="check-box-container"><input type="checkbox" class="inits" name="exclude_warp_buttons"><span class="checkmark"></span>Exclude Warp Buttons</label>
                             <label class="checkbox-info" name="exclude_warp_buttons"><img src="img/question_mark.webp" alt="question_mark"><span class="info-box">Warp Gate Buttons are not randomized and can (should) be pressed at any time</span></label>
                         </div>
-                        <div>
-                            <label class="check-box-container"><input type="checkbox" class="inits" name="exclude_orbs" onclick="clickedOrbs();"><span class="checkmark"></span>Exclude Orbs</label>
+                        <div style="pointer-events: none;">
+                            <label class="check-box-container"><input type="checkbox" checked="true" class="inits" name="exclude_orbs" onclick="clickedOrbs()";><span style="background-color: var(--dark-gray);" class="checkmark"></span>Exclude Orbs</label>
                             <label class="checkbox-info" name="exclude_orbs"><img src="img/question_mark.webp" alt="question_mark"><span class="info-box">Precursor Orbs are not randomized and can be collected at any time</span></label>
                         </div>
-                        <div>
-                            <div id="slider-container" style="padding: 0; border: none;">
+                        <div style="pointer-events: none;">
+                            <div class="disable-slider" id="slider-container" style="padding: 0; border: none;">
                                 <div id="slider-bar" style="padding: 0; border: none;"></div>
                                 <div class="slider-circles" style="padding: 0; border: none;">
                                     <div class="slider-circle" style="padding: 0; border: none"><p>1</p></div>
