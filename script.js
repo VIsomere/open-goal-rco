@@ -27,6 +27,18 @@ function setInit() {
     return initCode;
 }
 
+const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+document.getElementById("orb-checkbox").addEventListener("click", function() {
+    document.getElementById("alert-box").style.display = "block";
+    document.body.style.paddingRight = scrollBarWidth + "px";
+    document.body.classList.add("locked");
+}, { once: true });
+function closeAlert() {
+    document.getElementById("alert-box").style.display = "none";
+    document.body.style.paddingRight = "0px";
+    document.body.classList.remove("locked");
+}
+
 // Slider
 const slider = document.getElementById('slider');
 const sliderBar = document.getElementById('slider-bar');

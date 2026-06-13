@@ -13,7 +13,6 @@ double_split = 0
 splits = 0
 counter = 0
 written_splits = 0
-print(orb_bundle_size)
 
 #meta_data
 splits_list = []
@@ -29,9 +28,15 @@ if exclude_orbs:
     available_orbs = 337
 else:
     available_orbs = 0
-orbs = {"GR": 50, "SV": 50, "FJ": 99, "MI": 0, "SB": 138, "FC": 0, "RV": 50, "PB": 0, "LPC": 200, "BS": 200, "MP": 0, "VC": 50, "SC": 185, "SM": 0, "LT": 0, "C": 0}
-remaining_orbs = {"GR": 50, "SV": 0, "FJ": 0, "MI": 0, "SB": 0, "FC": 0, "RV": 0, "PB": 0, "LPC": 0, "BS": 0, "MP": 0, "VC": 0, "SC": 0, "SM": 0, "LT": 0, "C": 0}
+orbs = {"GR": 30, "SV": 50, "FJ": 99, "MI": 0, "SB": 138, "FC": 0, "RV": 50, "PB": 0, "LPC": 200, "BS": 200, "MP": 0, "VC": 50, "SC": 185, "SM": 0, "LT": 0, "C": 0}
+remaining_orbs = {"GR": 30, "SV": 0, "FJ": 0, "MI": 0, "SB": 0, "FC": 0, "RV": 0, "PB": 0, "LPC": 0, "BS": 0, "MP": 0, "VC": 0, "SC": 0, "SM": 0, "LT": 0, "C": 0}
 amount_orb_bundles = 2000 // orb_bundle_size
+crates = {
+    "FC": {"number_crates": 5, "crate_size": 10, "bundles": 0, "last_bundle": -1}, 
+    "PB": {"number_crates": 17, "crate_size": 6, "bundles": 82 // orb_bundle_size, "last_bundle": 82 % orb_bundle_size},
+    "LPC": {"number_crates": 16, "crate_size": 2, "bundles": 167 // orb_bundle_size, "last_bundle": 167 % orb_bundle_size},
+    "MP": {"number_crates": 6, "crate_size": 2, "bundles": 34 // orb_bundle_size, "last_bundle": 34 % orb_bundle_size}, 
+    "LT": {"number_crates": 3, "crate_size": 5, "bundles": 33 // orb_bundle_size, "last_bundle": 33 % orb_bundle_size}}
 bundle_chance = math.ceil(amount_orb_bundles / (len(data) + amount_orb_bundles) * 100)
 
 #prepare file
@@ -46,11 +51,31 @@ else:
 #geyser
 while power_cells < 4:
     write = True
+    orb = False
 
-    rnd = random.randint(0, len(geyser_data) - 1)
+    if not exclude_orbs:
+        if random.randint(0, 100) < bundle_chance:
+            item_type = "ORB"
+            item_area = "GR"
+           
+            if remaining_orbs[item_area] >= orb_bundle_size:
+                item = "[" + item_area + "|ORB] Collect " + str(orb_bundle_size) + " Orbs"
+                available_orbs += orb_bundle_size
+                remaining_orbs[item_area] -= orb_bundle_size
+                orb = True
 
-    item = geyser_data[rnd]
-    item_type = item.split("|")[1].split("]")[0]
+    if not orb:
+        rnd = random.randint(0, len(geyser_data) - 1)
+
+        item = geyser_data[rnd]
+        item_type = item.split("|")[1].split("]")[0]
+
+    if allow_precursor_door_skip:
+        if orbs["GR"] == 30:
+            orbs["GR"] += 20
+            remaining_orbs["GR"] += 20
+            if exclude_orbs:
+                available_orbs += 20
 
     if item_type == "SF":
         scout_flies["GR"] += 1
@@ -63,6 +88,11 @@ while power_cells < 4:
             write = False
 
     if item == "[GR|MISC] Open The Locked Precursor Door":
+        if orbs["GR"] == 30:
+            orbs["GR"] += 20
+            remaining_orbs["GR"] += 20
+            if exclude_orbs:
+                available_orbs += 20
         if exclude_misc_items:
             write = False
             geyser_data.pop(rnd)
@@ -76,9 +106,10 @@ while power_cells < 4:
     if write:
         if item_type == "PC":
             power_cells += 1
-        splits_list.append(geyser_data[rnd])
+        splits_list.append(item)
         written_splits += 1
-        geyser_data.pop(rnd)
+        if not item_type == "ORB":
+            geyser_data.pop(rnd)
 
 #rest of game
 hub_one_orbs = False
@@ -220,7 +251,39 @@ while len(data) > 0:
             areas = ["GR", "SV", "FJ", "MI", "SB", "FC", "RV", "PB", "LPC", "BS", "MP", "VC", "SC", "SM", "LT", "C"]
             while not valid_area:
                 item_area = random.choice(areas)
-                if remaining_orbs[item_area] >= orb_bundle_size:
+                if item_area in crates.keys():
+                    num_crates = crates[item_area]["number_crates"]
+                    crate_size = crates[item_area]["crate_size"]
+                    bundles = crates[item_area]["bundles"]
+                    rand = random.randint(0, num_crates + bundles)
+                    if item_area == "FC":
+                        print(num_crates, crate_size, bundles, rand)
+                    if rand <= num_crates and num_crates > 0 and remaining_orbs[item_area] >= crate_size:
+                        item = "[" + item_area + "|ORB] Collect An Orb Crate"
+                        crates[item_area]["number_crates"] -= 1
+                        available_orbs += crate_size
+                        remaining_orbs[item_area] -= crate_size
+                        orb = True
+                        valid_area = True
+                    elif bundles > 0 and remaining_orbs[item_area] >= orb_bundle_size:
+                        item = "[" + item_area + "|ORB] Collect " + str(orb_bundle_size) + " Orbs"
+                        crates[item_area]["bundles"] -= 1
+                        available_orbs += orb_bundle_size
+                        remaining_orbs[item_area] -= orb_bundle_size
+                        orb = True
+                        valid_area = True
+                    elif num_crates == 0 and bundles == 0 and remaining_orbs[item_area] == crates[item_area]["last_bundle"]:
+                        item = "[" + item_area + "|ORB] Collect " + str(crates[item_area]["last_bundle"]) + " Orbs"
+                        available_orbs += crates[item_area]["last_bundle"]
+                        remaining_orbs[item_area] -= crates[item_area]["last_bundle"]
+                        orb = True
+                        valid_area = True
+                    else:
+                        areas.remove(item_area)
+                        if len(areas) == 0:
+                            valid_area = True
+
+                elif remaining_orbs[item_area] >= orb_bundle_size:
                     valid_area = True
                     item = "[" + item_area + "|ORB] Collect " + str(orb_bundle_size) + " Orbs"
                     available_orbs += orb_bundle_size
@@ -340,7 +403,7 @@ while len(data) > 0:
         snowy_flut = True
     #cannon
     if item == "[SB|MISC] Stop The Shooting Cannon":
-        if not allow_tower_climb and not blue_eco:
+        if not (allow_tower_climb or blue_eco) or not remaining_orbs["SB"] == 0:
             write = False
         else:
             sentinel_cannon = True
@@ -502,7 +565,10 @@ while len(data) > 0:
     #lpc
     #button clip
     if item == "[LPC|MISC] Open The Sunken Chamber":
-        chamber_opened = True
+        if not remaining_orbs["LPC"] == 0:
+            write = False
+        else:
+            chamber_opened = True
     if item == "[LPC|PC] Raise The Chamber":
         if not allow_button_clip and not chamber_opened:
             write = False
@@ -634,7 +700,13 @@ while len(data) > 0:
     #blockers
     if item_type == "MISC" and "Blocker" in item:
         if snowy:
-            blockers += 1
+            if item in ["[SM|MISC] Blocker Near Gondola", "[SM|MISC] Blocker Near Snow Balls (Left)", "[SM|MISC] Blocker Near Snow Balls (Right)"]:
+                if not remaining_orbs["SM"] == 0:
+                    write = False
+                else:
+                    blockers += 1
+            else:
+                blockers += 1
     if item == "[SM|PC] Deactivate The Precursor Blockers":
         if blockers < 13:
             write = False
@@ -799,7 +871,7 @@ while len(data) > 0:
             remaining_orbs["FC"] += 50
             if exclude_orbs:
                 available_orbs += 50
-    #hub 2 (50 + 200 + 200 = 450)
+    #hub 2 (50 + 200 + 199 = 450)
     if item == "[FC|PC] Reach The End Of Fire Canyon":
         if write:
             if exclude_orbs:
@@ -807,7 +879,7 @@ while len(data) > 0:
             else:
                 remaining_orbs["RV"] += 50
                 remaining_orbs["BS"] += 200
-                remaining_orbs["LPC"] += 200
+                remaining_orbs["LPC"] += 199
             #precursor basin
             if allow_on_foot_basin:
                 orbs["PB"] += 82
@@ -817,10 +889,10 @@ while len(data) > 0:
     #precursor basin
     if blue_button or exclude_warp_buttons:
         if orbs["PB"] == 82:
-            orbs["PB"] += 118
-            remaining_orbs["PB"] += 118
+            orbs["PB"] += 102
+            remaining_orbs["PB"] += 102
             if exclude_orbs:
-                available_orbs += 118
+                available_orbs += 102
         elif orbs["PB"] == 0:
             orbs["PB"] += 200
             remaining_orbs["PB"] += 200
@@ -830,10 +902,10 @@ while len(data) > 0:
     if item_area in ["MP", "VC", "SM", "SC", "LT", "C"]:
         if write:
             if orbs["MP"] == 0:
-                orbs["MP"] += 50
-                remaining_orbs["MP"] += 50
+                orbs["MP"] += 46
+                remaining_orbs["MP"] += 46
                 if exclude_orbs:
-                    available_orbs += 50
+                    available_orbs += 46
     #hub 3 (50 + 185)
     if item == "[MP|MISC] Stop The Bomb Lurker":
         if write:
@@ -884,10 +956,10 @@ while len(data) > 0:
     if item_area in ["LT", "C"]:
         if write:
             if orbs["LT"] == 0:
-                orbs["LT"] += 50
-                remaining_orbs["LT"] += 50
+                orbs["LT"] += 48
+                remaining_orbs["LT"] += 48
                 if exclude_orbs:
-                    available_orbs += 50
+                    available_orbs += 48
     #citadel
     if item_area == "C":
         if write:

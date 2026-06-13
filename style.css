@@ -268,6 +268,45 @@ h3 {
     border-top: 2px solid var(--black);
 }
 
+/* Alert */
+
+.locked {
+    overflow-y: hidden;
+    user-select: none;
+    pointer-events: none;
+}
+
+.custom-alert {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--dark-gray);
+    color: var(--white);
+    padding: 15px 25px;
+    border-radius: 8px;
+    box-shadow: 0 0 0 100vw rgba(0,0,0,0.3);
+    z-index: 1000;
+}
+
+.custom-alert button {
+    pointer-events: all;
+    margin-top: 10px;
+    margin-left: 100%;
+    transform: translateX(-100%);
+    padding: 10px 10px;
+    border: none;
+    background: var(--light-red);
+    color: var(--white);
+    border-radius: 4px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.custom-alert button:hover {
+    background-color: var(--dark-red);
+}
+
 /* Slider */
 #slider-container {
     width: 100%;
