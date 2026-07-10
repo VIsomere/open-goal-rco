@@ -5,12 +5,13 @@ orb_bundle_size = 0
 write_split_progress = 0
 write_percent_progress = 0
 
-#Inclusion
+#General
 exclude_misc_items = 0                  # 0 -> Miscellaneous Items Will Not Be Randomized And Can Be Completed At Any Time
 exclude_scout_flies = 0                 # 0 -> Scout Flies Will Not Be Randomized And Can Be Collected At Any Time
 exclude_power_cells = 0
 exclude_warp_buttons = 0                # 0 -> The Warp Buttons Will Not Be Randomized And Can Be Pressed At Any Time
 exclude_orbs = 0                        # 0 -> Precursor Orbs Will Not Be Randomized And Can Be Collected At Any Time
+fast_progression = 0                    # 0 -> No Changes
 
 #Main Skips
 allow_fcs = 0                           # 0 -> FCS Will Never Be Necessary

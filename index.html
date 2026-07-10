@@ -12,7 +12,9 @@
 </head>
 <body">
     <!-- TO-DO
-        ...
+        - Add?: Fast Hubs option
+            -> 50/50 if scout flies are written, if enough orbs -> 50/50 to buy cells, if skips allowed/enough cells: 1/5 to progress
+        - Add?: per level orb count to splits on "grab orb" splits (?crates)
     -->
     
     <!-- info-image -->
@@ -91,12 +93,12 @@
                     Before starting to play I would advise you to read this section as it might help you with later struggles.
                     <ul style="list-style-type: disc; padding: 0 0 0 20px; margin: 10px 0 0 0;">
                         <li>Softlocks should almost never be possible regardless of your set of rules.</li>
-                        <li>If not including the Warp Gate Buttons you should immediately press them once available, as you might softlock yourself out of Snowy Mountain.</li>
                         <li>Some of the rules might cause a lot of pain (e.g. Allow FCS will likely have you do it multiple times).</li>
                         <li>All the collectibles are listed on the right. I would recommend taking a look at these before starting.</li>
                         <li>When playing make sure to only do your current task. Everything not required to do so might be an objective for later.</li>
-                        <li>I would also recommend to save your game from time to time in case you accidentally collect something and have to reload.</li>
-                        <li>After a little bit of testing I would estimate a playtime of 8-10 hours excluding FCS & LTS.</li>
+                        <li>I would also recommend to save your game (maybe turn off auto-save) from time to time in case you accidentally collect something and have to reload.</li>
+                        <li>The Auto-Splitter is activated for all Power Cells and Scout Flies.</li>
+                        <li>After a little bit of testing I would estimate a playtime of ... hours using orb bundles of size 10 and excluding FCS & LTS.</li>
                     </ul>
                     <br>
                     <h3>Troubleshooting</h3>
@@ -125,7 +127,7 @@
                             <label class="check-box-container"><input type="checkbox" class="inits" name="write_percent_progress"><span class="checkmark"></span>Write Percent Progress</label>
                             <label class="checkbox-info" name="write_percent_progress"><img src="img/question_mark.webp" alt="question_mark"><span class="info-box">Show your progress by displaying the percentage of completed tasks</span></label>
                         </div>
-                        <a>Inclusion</a>
+                        <a>General Settings</a>
                         <div>
                             <label class="check-box-container"><input type="checkbox" class="inits" name="exclude_scout_flies"><span class="checkmark"></span>Exclude Scout Flies</label>
                             <label class="checkbox-info" name="exclude_scout_flies"><img src="img/question_mark.webp" alt="question_mark"><span class="info-box">Scout Flies are not randomized and can be collected at any time</span></label>
@@ -147,7 +149,12 @@
                             <p>
                                 Using this feature is  only recommended for experienced players that are familiar with various skips and tricks, as it might requires some creative parcour and precise timings to reach some location without collecting orbs.<br>
                                 Even so, you shouldn't be able to softlock yourself, for example by not collecting the "right" orbs.<br><br>
-                                But if you are up for this challenge, those small obstacles shouldn't even scare you ;)
+                                But if you are up for this challenge, those small obstacles shouldn't even scare you ;)<br><br>
+                            </p>
+                            <h3>!!! Disambiguation !!!</h3>
+                            <p>
+                                Collectibles labled 'Crates' can only be found in all transition levels (FC, MP, LT) aswell as in PB and LPC.
+                                In case of LPC only the crates on the two slides are counted as such. Every other crate in the game must first be broken and the orbs then collected individually.
                             </p>
                             <button onclick="closeAlert()">I'll take the risk...</button>
                         </div>
@@ -165,6 +172,10 @@
                             </div>
                             <label class="checkbox-info" name="exclude_orbs"><img src="img/question_mark.webp" alt="question_mark"><span class="info-box">Determines the size of the orb bundles</span></label>
                         </div>
+                        <!-- <div>
+                            <label class="check-box-container"><input type="checkbox" class="inits" name="fast_progression"><span class="checkmark"></span>Fast Progression</label>
+                            <label class="checkbox-info" name="exclude_warp_buttons"><img src="img/question_mark.webp" alt="question_mark"><span class="info-box">Modifies the ranomizer to allow faster progression into the other hubs</span></label>
+                        </div> -->
                         <a id="seperator-line">Skips</a>
                         <div>
                             <label class="check-box-container"><input type="checkbox" class="inits" name="allow_fcs" checked><span class="checkmark"></span>Allow FCS</label>
@@ -380,6 +391,7 @@
                                     <dd class="dropdown-menu-item-data hide">
                                         <ul class="dropdown-submenu">
                                             <li class="dropdown-submenu-item"><a>Stop The Shooting Cannon</a></li>
+                                            <li class="dropdown-submenu-item"><a>Let The Pelican Grab The Power Cell</a></li>
                                             <li class="dropdown-submenu-item"><a>Chase Seagulls 1st Time</a></li>
                                             <li class="dropdown-submenu-item"><a>Chase Seagulls 2nd Time</a></li>
                                             <li class="dropdown-submenu-item"><a>Chase Seagulls 3rd Time</a></li>

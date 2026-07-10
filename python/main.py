@@ -126,6 +126,7 @@ if exclude_misc_items:
     plant_boss = True
     blue_eco = False
     sentinel_cannon = True
+    pelican = True
     seagulls = 3
     egg = True
     eco_blockers = 5
@@ -144,6 +145,7 @@ else:
     plant_boss = False
     blue_eco = False
     sentinel_cannon = False
+    pelican = False
     seagulls = 0
     egg = False
     eco_blockers = 0
@@ -215,7 +217,7 @@ if exclude_misc_items:
     oranges = True
     citadel = False
     citi_button = False
-    force_lt_cell = False
+    force_citi_button = False
     lt_cell = False
     citadel_stairs = 0
 else:
@@ -235,7 +237,7 @@ else:
     oranges = False
     citadel = False
     citi_button = False
-    force_lt_cell = False
+    force_citi_button = False
     lt_cell = False
     citadel_stairs = 0
 
@@ -256,9 +258,7 @@ while len(data) > 0:
                     crate_size = crates[item_area]["crate_size"]
                     bundles = crates[item_area]["bundles"]
                     rand = random.randint(0, num_crates + bundles)
-                    if item_area == "FC":
-                        print(num_crates, crate_size, bundles, rand)
-                    if rand <= num_crates and num_crates > 0 and remaining_orbs[item_area] >= crate_size:
+                    if rand <= num_crates and num_crates > 0 and remaining_orbs[item_area] >= crate_size and (blue_button or not item_area == "PB"):
                         item = "[" + item_area + "|ORB] Collect An Orb Crate"
                         crates[item_area]["number_crates"] -= 1
                         available_orbs += crate_size
@@ -296,15 +296,15 @@ while len(data) > 0:
         
     if not orb:
         if power_cells < 20 and not allow_fcs: #prevent fcs
-            rnd = random.randint(0, 86 - splits)
+            rnd = random.randint(0, 87 - splits)
         elif not fc_cell: #end of fc softlock
-            rnd = random.randint(0, 99 - splits)
+            rnd = random.randint(0, 100 - splits)
         elif power_cells < 45 and not allow_boulder_skip: #prevent bs
-            rnd = random.randint(0, 177 - splits)
+            rnd = random.randint(0, 178 - splits)
         elif not bomb_lurker: #bomb lurker softlock
-            rnd = random.randint(0, 202 - splits)
+            rnd = random.randint(0, 203 - splits)
         elif power_cells < 72 and not allow_lts: #prevent lts
-            rnd = random.randint(0, 282 - splits)
+            rnd = random.randint(0, 283 - splits)
         else:
             rnd = random.randint(0, len(data) - 1)
 
@@ -403,12 +403,18 @@ while len(data) > 0:
         snowy_flut = True
     #cannon
     if item == "[SB|MISC] Stop The Shooting Cannon":
-        if not (allow_tower_climb or blue_eco) or not remaining_orbs["SB"] == 0:
+        if not allow_tower_climb and (not blue_eco or (not remaining_orbs["SB"] == 0 and not exclude_orbs)):
             write = False
         else:
             sentinel_cannon = True
     if item == "[SB|PC] Launch Up To The Cannon Tower":
         if not sentinel_cannon:
+            write = False
+    #pelican
+    if item == "[SB|MISC] Let The Pelican Grab The Power Cell":
+        pelican = True
+    if item == "[SB|PC] Get The Power Cell From The Pelican":
+        if not pelican:
             write = False
     #seagulls
     if item == "[SB|MISC] Chase Seagulls 1st Time":
@@ -445,7 +451,8 @@ while len(data) > 0:
             write = False
     if item == "[FJ|PC] Catch 200 Pounds Of Fish":
         misty = True
-        scout_flies["MI"] = 7
+        if exclude_scout_flies:
+            scout_flies["MI"] = 7
     #muse
     if item == "[MI|PC] Catch The Sculptor's Muse":
         if not muse:
@@ -565,7 +572,7 @@ while len(data) > 0:
     #lpc
     #button clip
     if item == "[LPC|MISC] Open The Sunken Chamber":
-        if not remaining_orbs["LPC"] == 0:
+        if not (remaining_orbs["LPC"] == 0 or exclude_orbs):
             write = False
         else:
             chamber_opened = True
@@ -701,7 +708,7 @@ while len(data) > 0:
     if item_type == "MISC" and "Blocker" in item:
         if snowy:
             if item in ["[SM|MISC] Blocker Near Gondola", "[SM|MISC] Blocker Near Snow Balls (Left)", "[SM|MISC] Blocker Near Snow Balls (Right)"]:
-                if not remaining_orbs["SM"] == 0:
+                if not (remaining_orbs["SM"] == 0 or exclude_orbs):
                     write = False
                 else:
                     blockers += 1
@@ -763,15 +770,22 @@ while len(data) > 0:
             if exclude_warp_buttons:
                 citi_button = True
                 
-    if item_area in ["LT", "C"] and not (item == "[LT|SF] 1st Scout Fly" or item == "[LT|SF] 2nd Scout Fly"): 
+    if item_area in ["LT"] and not (item == "[LT|SF] 1st Scout Fly" or item == "[LT|SF] 2nd Scout Fly"): 
         if not allow_oranges_skip and not oranges:
             write = False
         elif not lt_cell:
-            force_lt_cell = True
+            if exclude_warp_buttons:
+                citi_button = True
+            else:
+                force_citi_button = True
 
     #citadel
     if item == "[LT|MISC] Press Citadel Warp Gate Button":
-        citi_button = True
+        if citi_button:
+            write = False
+            data.pop(rnd)
+        else:
+            citi_button = True
     if item_area == "C":
         if exclude_warp_buttons:
             citi_button = True
@@ -1003,10 +1017,10 @@ while len(data) > 0:
             splits_list.append("[MP|PC] Reach The End Of The Mountain Pass")
             written_splits += 1
             splits += 1
-        if force_lt_cell:
-            force_lt_cell = False
-            lt_cell = True
-            splits_list.append("[LT|PC] Reach The End Of The Lava Tube")
+        if force_citi_button:
+            force_citi_button = False
+            citi_button = True
+            splits_list.append("[LT|MISC] Press Citadel Warp Gate Button")
             written_splits += 1
             splits += 1
         if item_type == "PC":

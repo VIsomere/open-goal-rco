@@ -248,7 +248,7 @@ async function runMain() {
         
     } catch (err) {
         console.error(err);
-        alert("Error while generating Splits.");
+        alert("Error while generating Splits.\n\nPlease try again using a different seed.\nIf the error persists please message me.");
     } finally {
         button.classList.remove("disabled");
         fileButtons[0].classList.remove("disabled");

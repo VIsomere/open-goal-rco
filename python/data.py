@@ -88,6 +88,7 @@ data_original = [
 "[FJ|MISC] Beat Plant Boss",
 "[FJ|MISC] Open Locked Temple Door",
 "[SB|MISC] Stop The Shooting Cannon",
+"[SB|MISC] Let The Pelican Grab The Power Cell",
 "[SB|MISC] Chase Seagulls 1st Time",
 "[SB|MISC] Chase Seagulls 2nd Time",
 "[SB|MISC] Chase Seagulls 3rd Time",
