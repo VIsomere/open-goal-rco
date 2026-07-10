@@ -349,6 +349,7 @@ h3 {
 }
 
 #slider {
+    appearance: none;
     -webkit-appearance: none;
     position: absolute;
     margin: 0;
