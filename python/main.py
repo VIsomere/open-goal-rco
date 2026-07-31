@@ -847,7 +847,7 @@ while len(data) > 0:
             if exclude_orbs:
                 available_orbs += 12
     #forbidden jungle
-    if temple_elevator or (allow_temple_deload and (blue_eco or plant_boss)):
+    if (temple_elevator or allow_temple_deload) and (blue_eco or plant_boss):
         if orbs["FJ"] == 99:
             orbs["FJ"] += 26
             remaining_orbs["FJ"] += 26
