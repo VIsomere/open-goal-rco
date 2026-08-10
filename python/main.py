@@ -770,10 +770,10 @@ while len(data) > 0:
             if exclude_warp_buttons:
                 citi_button = True
                 
-    if item_area in ["LT"] and not (item == "[LT|SF] 1st Scout Fly" or item == "[LT|SF] 2nd Scout Fly"): 
+    if item_area in ["LT"] and not (item == "[LT|SF] 1st Scout Fly" or item == "[LT|SF] 2nd Scout Fly") and not item_type == "ORB": 
         if not allow_oranges_skip and not oranges:
             write = False
-        elif not lt_cell:
+        elif not citi_button:
             if exclude_warp_buttons:
                 citi_button = True
             else:
@@ -798,6 +798,9 @@ while len(data) > 0:
     if item in ["[C|PC] Free The Yellow Sage", "[C|PC] Free The Red Sage", "[C|PC] Free The Blue Sage"]:
         if write:
             citadel_stairs += 1
+    if item == ["[C|PC] Free The Green Sage"]:
+        if not (remaining_orbs["C"] == 0 or exclude_orbs):
+            write = False
     if item in ["[C|SF] Top Of Rotating Tower", "[C|PC] Free The Green Sage"]:
         if not allow_citadel_skip and not citadel_stairs == 3:
             write = False
