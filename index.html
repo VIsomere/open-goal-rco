@@ -97,7 +97,7 @@
                         <li>When playing make sure to only do your current task. Everything not required to do so might be an objective for later.</li>
                         <li>I would also recommend to save your game (maybe turn off auto-save) from time to time in case you accidentally collect something and have to reload.</li>
                         <li>The Auto-Splitter is activated for all Power Cells and Scout Flies.</li>
-                        <li>After a little bit of testing I would estimate a playtime of 15 - 20 hours using orb bundles of size 10 and excluding FCS & LTS.</li>
+                        <li>The estimated time is based on rough approximations of travel time between levels and the time it takes to complete tasks.</li>
                     </ul>
                     <br>
                     <h3>Troubleshooting</h3>
@@ -247,6 +247,11 @@
                             <label class="check-box-container"><input type="checkbox" class="inits" name="allow_citadel_skip" checked><span class="checkmark"></span>Allow Citadel Skip</label>
                             <label class="checkbox-info" name="allow_citadel_skip"><img src="img/question_mark.webp" alt="question_mark"><span class="info-box">Performing Citadel Skip or v2 may be required</span></label>
                         </div>
+                    </div>
+                    
+                    <div class="text-container" style="margin: 15px 0 0 0;">
+                        <h2>Estimated Time</h2>
+                        <p id="time-estimate">-- : -- : --</p>
                     </div>
                     
                     <button id="btn" class="button" onclick="runMain()">Generate Splits</button>

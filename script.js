@@ -210,7 +210,7 @@ async function loadPyodideRuntime() {
         const pyFiles = [
             "python/data.py",
             "python/init.py",
-            "python/writing.py",
+            "python/util.py",
             "python/main.py"
         ];
         await Promise.all(pyFiles.map(async (filename) => {
@@ -242,13 +242,16 @@ async function runMain() {
         
         pyodide.FS.writeFile("init.py", setInit());
         await pyodide.runPythonAsync(`import main`);
+
+        const est_time = pyodide.runPython(`main.est_time`);
+        document.getElementById("time-estimate").innerText = est_time;
         
         const files = pyodide.FS.readdir(".");
         lastGeneratedFile = files[files.length - 1]; 
         
     } catch (err) {
         console.error(err);
-        alert("Error while generating Splits.\n\nPlease try again using a different seed.\nIf the error persists please message me.");
+        alert("Error while generating Splits.\n\nPlease try refreshing the site or using a different seed.\nIf the error persists please message me.");
     } finally {
         button.classList.remove("disabled");
         fileButtons[0].classList.remove("disabled");

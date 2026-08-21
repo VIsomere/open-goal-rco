@@ -1,4 +1,4 @@
-from writing import openFile, writeSplit, closeFile
+from util import openFile, writeSplit, closeFile, setNode, getDist, format_seconds, original_travel_time_graph
 from data import geyser_data_original, data_original
 #from init_debug import *
 from init import *
@@ -13,6 +13,10 @@ double_split = 0
 splits = 0
 counter = 0
 written_splits = 0
+travel_times = original_travel_time_graph.copy()
+total_travel_time = 0
+average_task_time = 60
+total_task_time = 0
 
 #meta_data
 splits_list = []
@@ -241,10 +245,14 @@ else:
     lt_cell = False
     citadel_stairs = 0
 
+item_area = "SV"
+
 while len(data) > 0:
     counter += 1
     write = True
     orb = False
+
+    last_item_area = item_area
 
     if not exclude_orbs:
         if random.randint(0, 100) < bundle_chance:
@@ -488,6 +496,9 @@ while len(data) > 0:
             fc_cell = True
             if exclude_warp_buttons:
                 blue_button = True
+    # node change
+    if power_cells > 19:
+        setNode(travel_times, "FC", "RV", 65)
 
     #rock village
     #button
@@ -666,6 +677,9 @@ while len(data) > 0:
             write = False
             data.pop(rnd)
             splits += 1
+    # node change
+    if mp_cell:
+        setNode(travel_times, "VC", "MP", 76)
 
     #volcanic crater
     #button
@@ -779,9 +793,13 @@ while len(data) > 0:
             else:
                 force_citi_button = True
 
+    # node change
+    if power_cells > 71 and red_button:
+        setNode(travel_times, "LT", "C", 125)
+
     #citadel
     if item == "[LT|MISC] Press Citadel Warp Gate Button":
-        if citi_button:
+        if citi_button and not exclude_misc_items:
             write = False
             data.pop(rnd)
         else:
@@ -992,11 +1010,33 @@ while len(data) > 0:
                     if exclude_orbs:
                         available_orbs += 20
 
+    # handle node changes
+    if blue_button:
+        setNode(travel_times, "SV", "RV", 14)
+        setNode(travel_times, "RV", "SV", 11)
+        if red_button:
+            setNode(travel_times, "RV", "VC", 13)
+        if citi_button:
+            setNode(travel_times, "RV", "C", 19)
+    if red_button:
+        setNode(travel_times, "SV", "VC", 15)
+        setNode(travel_times, "VC", "SV", 15)
+        setNode(travel_times, "VC", "RV", 15)
+        if citi_button:
+            setNode(travel_times, "VC", "C", 21)
+    if citi_button:
+        setNode(travel_times, "SV", "C", 22)
+        setNode(travel_times, "C", "SV", 15)
+        setNode(travel_times, "C", "RV", 15)
+        setNode(travel_times, "C", "VC", 16)
+
     #write split
     if force_miners_cell:
         force_miners_cell = False
         miners_count += 1
         splits_list.append("[VC|PC] Bring 90 Orbs To The Miners")
+        total_travel_time += getDist(travel_times, item_area, last_item_area)
+        total_task_time += average_task_time
         written_splits += 1
         splits += 1
         power_cells += 1
@@ -1006,24 +1046,32 @@ while len(data) > 0:
         if item == "[VC|PC] Bring 90 Orbs To The Miners":
             miners_count += 1
         splits_list.append(item)
+        total_travel_time += getDist(travel_times, item_area, last_item_area)
+        total_task_time += average_task_time
         written_splits += 1
         #force cells
         if force_plant_boss:
             force_plant_boss = False
             plant_boss = True
             splits_list.append("[FJ|MISC] Beat Plant Boss")
+            total_travel_time += getDist(travel_times, item_area, last_item_area)
+            total_task_time += average_task_time
             written_splits += 1
             splits += 1
         if force_mp_cell:
             force_mp_cell = False
             mp_cell = True
             splits_list.append("[MP|PC] Reach The End Of The Mountain Pass")
+            total_travel_time += getDist(travel_times, item_area, last_item_area)
+            total_task_time += average_task_time
             written_splits += 1
             splits += 1
         if force_citi_button:
             force_citi_button = False
             citi_button = True
             splits_list.append("[LT|MISC] Press Citadel Warp Gate Button")
+            total_travel_time += getDist(travel_times, item_area, last_item_area)
+            total_task_time += average_task_time
             written_splits += 1
             splits += 1
         if item_type == "PC":
@@ -1058,6 +1106,8 @@ while force_orbs:
         remaining_orbs[item_area] -= orb_bundle_size
 
         splits_list.append(item)
+        total_travel_time += getDist(travel_times, item_area, last_item_area)
+        total_task_time += average_task_time
         written_splits += 1
     else:
         areas.remove(item_area)
@@ -1089,3 +1139,6 @@ closeFile(file, seed)
 if double_split <= 250:
     print("Done :)")
 print("[Seed: " + str(seed) + "]")
+
+est_time = format_seconds(int((total_task_time + total_travel_time) * 1.5))
+print(total_task_time, total_travel_time)
